@@ -8,8 +8,8 @@
 import SwiftUI
 
 
-struct TileViewWide: View {
-    let edgePadding: CGFloat = 10
+struct TileViewLarge: View {
+    let edgePadding: CGFloat = 20
     
     var reviewEntry: ReviewEntry
     
@@ -18,7 +18,7 @@ struct TileViewWide: View {
         VStack{
             reviewEntry.image
                 .resizable()
-                .frame(width:336, height:160)
+                .frame(width:336, height:336)
                 .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius:20))
                 .padding(edgePadding)
@@ -29,7 +29,7 @@ struct TileViewWide: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.system(size:20, weight: .medium))
                 .padding(.leading, edgePadding)
-                //.padding([.top,.bottom],5)
+                .padding([.bottom],20)
             
             Text(reviewEntry.review)
                 .lineLimit(2)
@@ -47,19 +47,22 @@ struct TileViewWide: View {
                 .padding(.bottom, edgePadding)
                 .opacity(0.3)
         }
-        .frame(maxWidth:360, maxHeight:290)
         .background{
             RoundedRectangle(cornerRadius: 25)
                 .fill(LinearGradient(gradient: Gradient(colors: gradientColors), startPoint: .top, endPoint: .bottom))
                 .stroke(.white, lineWidth:2)
                 .shadow(radius:3)
         }
+        .padding([.leading, .trailing], 50)
+        .presentationBackground(Color.clear.opacity(0.0))
     }
+        
 }
+
 
 #Preview {
     let reviewEntries = ModelData().reviewEntries
     return Group{
-        TileViewWide(reviewEntry: reviewEntries[0])
+        TileViewLarge(reviewEntry: reviewEntries[0])
     }
 }

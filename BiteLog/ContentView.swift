@@ -11,52 +11,83 @@ struct ContentView: View {
     @State private var selection: Tab = .journal
     @State private var showingAddEntry = false
     
+    private var foreGroundColor: Color = .white
+    private var buttonSize: CGFloat = 35
+    private var buttonFrameSize: CGFloat = 35
+    private var innerPadding: CGFloat = 20
+    private var outerPadding: CGFloat = 10
+    
     enum Tab{
         case journal
         case map
     }
     
     var body: some View {
-        ZStack(alignment: .bottom){
-      
-            TabView(selection: $selection){
-                TileListView()
-                    .tabItem{
-                        Label("Journal", systemImage:"book.pages.fill")
-                    }
-                    .environment(ModelData())
-                    .tag(Tab.journal)
-                
+        NavigationStack{
+            TileListView()
+                .environment(ModelData())
             
-                
-                MapView()
-                    .tabItem{
-                        Label("Map", systemImage:"mappin.and.ellipse.circle.fill")
+          
+            
+                .toolbar{
+                    ToolbarItem(placement: .bottomBar){
+                        VStack{
+                            Button{
+                                withAnimation(.bouncy){
+                                    showingAddEntry.toggle()
+                                }
+                            } label: {
+                                Image(systemName: "map.circle.fill")
+                                    .foregroundStyle(foreGroundColor)
+                                    .font(.system(size:buttonSize, weight: .bold))
+                            }
+     
+                        }
+                        .frame(width:buttonFrameSize, height:buttonFrameSize)
+                        .padding(.leading, outerPadding)
+                        
                     }
-                    .environment(ModelData())
-                    .tag(Tab.map)
-                
+                    
+                    ToolbarItem(placement: .bottomBar){
+                        VStack{
+                            Button{
+                                withAnimation(.bouncy){
+                                    showingAddEntry.toggle()
+                                }
+                            } label: {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size:45, weight: .bold))
+                                    .foregroundStyle(.cyan)
+                              
+            
 
-            }
-            
-            
-            Button{
-                withAnimation(.bouncy){
-                    showingAddEntry.toggle()
+                            }
+                        }
+                        .frame(width:buttonFrameSize, height:buttonFrameSize)
+                        .padding([.leading,.trailing], innerPadding)
+                        .padding([.top, .bottom], outerPadding)
+                    }
+                    
+                    ToolbarItem(placement: .bottomBar){
+                        VStack{
+                            Button{
+                                withAnimation(.bouncy){
+                                    showingAddEntry.toggle()
+                                }
+                            } label: {
+                                Image(systemName: "person.crop.circle.fill")
+                                    .font(.system(size:buttonSize, weight: .bold))
+                                    .foregroundStyle(foreGroundColor)
+                            }
+                        }
+                        .frame(width:buttonFrameSize, height:buttonFrameSize)
+                        .padding(.trailing, outerPadding)
+                        
+                    }
+                    
+                    
+                    
                 }
-            } label: {
-                Image(systemName: "plus.circle")
-                    .glassEffect(Glass.clear)
-                    .labelStyle(.iconOnly)
-                    .aspectRatio(contentMode: .fit)
-                    .font(.system(size:50, weight: .bold))
-        
-            }
-            .frame(width:50, height:50)
-            .clipShape(Circle())
-            .padding(.bottom, 60)
-            .shadow(color:.black.opacity(0.7), radius:3)
-            
             
         }
         .sheet(isPresented: $showingAddEntry){

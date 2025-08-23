@@ -12,17 +12,25 @@ struct TileListView: View {
     let columns = [GridItem(.fixed(180)), GridItem(.fixed(180))]
     
     var reviewEntries: [ReviewEntry] = ModelData().reviewEntries
+  
+    @Namespace private var namespace
     
     var body: some View {
         
-        ScrollView(.vertical){
-            //TileViewWide(reviewEntry: reviewEntries[0])
+        ScrollView(.vertical, showsIndicators: false){
             LazyVGrid(columns: columns){
                 ForEach(reviewEntries, id: \.self) { review in
-                    TileViewCompact(reviewEntry: review)
+                    NavigationLink{
+                            TileViewLarge(reviewEntry: review)
+                            .navigationTransition(.zoom(sourceID: review.id, in: namespace))
+                    } label: {
+                        TileViewCompact(reviewEntry: review)
+                            .matchedTransitionSource(id: review.id, in: namespace)
+                    }
                     
                 }
             }
+            
         }
     }
 }

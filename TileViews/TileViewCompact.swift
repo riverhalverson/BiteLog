@@ -57,6 +57,8 @@ struct TileViewCompact: View {
                 .stroke(.white, lineWidth:2)
                 .shadow(color:.black.opacity(0.6)  , radius:3)
         }
+        .padding([.top,.bottom],6)
+        .padding([.leading,.trailing],5)
     }
 }
 
