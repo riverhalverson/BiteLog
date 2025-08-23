@@ -19,7 +19,7 @@ struct TileViewWide: View {
             reviewEntry.image
                 .resizable()
                 .frame(width:336, height:160)
-                .aspectRatio(CGSize(width:4,height:4), contentMode: .fill)
+                .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius:20))
                 .padding(edgePadding)
                 .shadow(radius:3)
