@@ -1,18 +1,18 @@
 //
-//  NewEntry.swift
+//  MapList.swift
 //  BiteLog
 //
-//  Created by River Halverson on 8/22/25.
+//  Created by River Halverson on 8/23/25.
 //
 
 import SwiftUI
 
-struct NewEntry: View {
+struct MapList: View {
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    NewEntry()
+    MapList()
 }

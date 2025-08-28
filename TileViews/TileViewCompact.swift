@@ -11,54 +11,64 @@ let gradientColors: [Color] = [
     .tileGradientTop,
     .tileGradientBottom]
 
+
 struct TileViewCompact: View {
     let edgePadding: CGFloat = 10
+    let tileWidth: CGFloat = 180
     
     var reviewEntry: ReviewEntry
     
     var body: some View {
         
         VStack{
+            // The reviews image
             reviewEntry.image
                 .resizable()
                 .frame(width:160, height:160)
                 .aspectRatio(CGSize(width:4,height:4), contentMode: .fill)
                 .clipShape(RoundedRectangle(cornerRadius:20))
+                .overlay(
+                    RoundedRectangle(cornerRadius:20)
+                        .stroke(.frameStroke, lineWidth:2)
+                )
                 .padding(edgePadding)
-                .shadow(color:.black,radius:3)
+                .shadow(color:.shadow,radius:3)
             
-            
+            // The reviews location
             Text(reviewEntry.locationName)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: tileWidth, alignment: .leading)
                 .font(.system(size:20, weight: .medium))
                 .padding(.leading, edgePadding)
-                //.padding([.top,.bottom],5)
+                .padding([.top,.bottom],1)
             
+            // The actual review itself
             Text(reviewEntry.review)
                 .lineLimit(2)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: tileWidth, maxHeight: 70,alignment: .leading)
                 .font(.system(size:12, weight: .regular))
                 .padding([.leading,.trailing], edgePadding)
-                .padding([.top,.bottom],3)
+                .padding([.top,.bottom],1)
             
             Spacer()
             
+            // Review Entry Date in lower right corner
             Text(reviewEntry.date)
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                .frame(maxWidth: tileWidth, alignment: .trailing)
                 .font(.system(size:11, weight: .light))
                 .padding(.trailing, edgePadding)
                 .padding(.bottom, edgePadding)
-                .opacity(0.3)
+                .opacity(0.5)
         }
-        .frame(maxWidth:180, maxHeight:290)
+        .frame(width:tileWidth, height:290)
         .background{
             RoundedRectangle(cornerRadius: 25)
                 .fill(LinearGradient(gradient: Gradient(colors: gradientColors), startPoint: .top, endPoint: .bottom))
-                .stroke(.white, lineWidth:2)
-                .shadow(color:.black.opacity(0.6)  , radius:3)
+                .stroke(.frameStroke, lineWidth:2)
+                .shadow(color:.shadow.opacity(0.6)  , radius:3)
         }
         .padding([.top,.bottom],6)
-        .padding([.leading,.trailing],5)
+        .padding([.leading,.trailing],6)
     }
 }
 

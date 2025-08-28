@@ -16,21 +16,28 @@ struct TileListView: View {
     @Namespace private var namespace
     
     var body: some View {
-        
-        ScrollView(.vertical, showsIndicators: false){
-            LazyVGrid(columns: columns){
-                ForEach(reviewEntries, id: \.self) { review in
-                    NavigationLink{
+        let columns: [GridItem] = [
+            GridItem(.fixed(200), spacing:1),
+            GridItem(.fixed(200), spacing:1)
+        ]
+        ZStack{
+            LinearGradient(gradient: Gradient(colors: gradientColors), startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
+            
+            ScrollView(.vertical, showsIndicators: false){
+                LazyVGrid(columns: columns){
+                    ForEach(reviewEntries, id: \.self) { review in
+                        NavigationLink{
                             TileViewLarge(reviewEntry: review)
-                            .navigationTransition(.zoom(sourceID: review.id, in: namespace))
-                    } label: {
-                        TileViewCompact(reviewEntry: review)
-                            .matchedTransitionSource(id: review.id, in: namespace)
+                                .navigationTransition(.zoom(sourceID: review.id, in: namespace))
+                        } label: {
+                            TileViewCompact(reviewEntry: review)
+                                .matchedTransitionSource(id: review.id, in: namespace)
+                            
+                        }
                     }
-                    
                 }
             }
-            
         }
     }
 }

@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
+
 
 struct ReviewEntry: Hashable, Codable, Identifiable{
     var id: Int

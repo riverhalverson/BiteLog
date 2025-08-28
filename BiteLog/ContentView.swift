@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var selection: Tab = .journal
     @State private var showingAddEntry = false
+    @State private var showingMap = false
     
     private var foreGroundColor: Color = .white
     private var buttonSize: CGFloat = 35
@@ -27,27 +28,25 @@ struct ContentView: View {
             TileListView()
                 .environment(ModelData())
             
-          
-            
                 .toolbar{
+                    // Map button
                     ToolbarItem(placement: .bottomBar){
                         VStack{
                             Button{
                                 withAnimation(.bouncy){
-                                    showingAddEntry.toggle()
+                                    showingMap.toggle()
                                 }
                             } label: {
                                 Image(systemName: "map.circle.fill")
                                     .foregroundStyle(foreGroundColor)
                                     .font(.system(size:buttonSize, weight: .bold))
                             }
-     
                         }
                         .frame(width:buttonFrameSize, height:buttonFrameSize)
                         .padding(.leading, outerPadding)
-                        
                     }
                     
+                    // Add entry button
                     ToolbarItem(placement: .bottomBar){
                         VStack{
                             Button{
@@ -58,16 +57,13 @@ struct ContentView: View {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.system(size:45, weight: .bold))
                                     .foregroundStyle(.cyan)
-                              
-            
-
                             }
                         }
                         .frame(width:buttonFrameSize, height:buttonFrameSize)
                         .padding([.leading,.trailing], innerPadding)
                         .padding([.top, .bottom], outerPadding)
                     }
-                    
+                    // Profile button
                     ToolbarItem(placement: .bottomBar){
                         VStack{
                             Button{
@@ -82,22 +78,22 @@ struct ContentView: View {
                         }
                         .frame(width:buttonFrameSize, height:buttonFrameSize)
                         .padding(.trailing, outerPadding)
-                        
                     }
-                    
-                    
-                    
                 }
-            
         }
+
         .sheet(isPresented: $showingAddEntry){
             NewEntry()
                 .environment(ModelData())
         }
-        .presentationDetents([.medium, .large])
-        .presentationBackgroundInteraction(.automatic)
-        .presentationBackground(.ultraThinMaterial)
+
         
+        .sheet(isPresented: $showingMap){
+            MapView()
+                .environment(ModelData())
+                .presentationDetents([.fraction(0.75)])
+                .presentationDragIndicator(.visible)
+        }
         
     }
  
