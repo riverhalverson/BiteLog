@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 let gradientColors: [Color] = [
     .tileGradientTop,
@@ -15,14 +16,20 @@ let gradientColors: [Color] = [
 struct TileViewCompact: View {
     let edgePadding: CGFloat = 10
     let tileWidth: CGFloat = 180
+    let review: ReviewModel
     
-    var reviewEntry: ReviewEntry
+    // Format date output
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter
+    }()
     
     var body: some View {
         
         VStack{
             // The reviews image
-            reviewEntry.image
+            Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
                 .resizable()
                 .frame(width:160, height:160)
                 .aspectRatio(CGSize(width:4,height:4), contentMode: .fill)
@@ -35,14 +42,14 @@ struct TileViewCompact: View {
                 .shadow(color:.shadow,radius:3)
             
             // The reviews location
-            Text(reviewEntry.locationName)
+            Text(review.locationName)
                 .frame(maxWidth: tileWidth, alignment: .leading)
                 .font(.system(size:20, weight: .medium))
                 .padding(.leading, edgePadding)
                 .padding([.top,.bottom],1)
             
             // The actual review itself
-            Text(reviewEntry.review)
+            Text(review.reviewEntry)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: tileWidth, maxHeight: 70,alignment: .leading)
@@ -53,7 +60,7 @@ struct TileViewCompact: View {
             Spacer()
             
             // Review Entry Date in lower right corner
-            Text(reviewEntry.date)
+            Text(dateFormatter.string(from: review.date))
                 .frame(maxWidth: tileWidth, alignment: .trailing)
                 .font(.system(size:11, weight: .light))
                 .padding(.trailing, edgePadding)
@@ -73,8 +80,20 @@ struct TileViewCompact: View {
 }
 
 #Preview {
-    let reviewEntries = ModelData().reviewEntries
-    return Group{
-        TileViewCompact(reviewEntry: reviewEntries[0])
+    let container = ReviewModel.preview
+    return PreviewReviewCompactTile()
+        .modelContainer(container)
+}
+
+private struct PreviewReviewCompactTile: View {
+    @Query(sort: \ReviewModel.date) private var reviews: [ReviewModel]
+
+    var body: some View {
+        // Always check array bounds!
+        if let review = reviews.first {
+            TileViewCompact(review: review)
+        } else {
+            Text("No preview data available")
+        }
     }
 }

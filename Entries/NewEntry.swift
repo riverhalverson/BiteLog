@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 struct NewEntry: View {
+    
     let edgePadding: CGFloat = 30
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -64,8 +66,9 @@ struct NewEntry: View {
                 Spacer(minLength:50)
                 
                 HStack{
-                    //Button("Save")
-                    
+                    Button("Save"){
+                        //let newEntry = ReviewModel(id: 10, locationName: newLocationName, review: newReviewEntry, date: String(newEntryDate), imageName: "pie.png")
+                    }
                     
                     Text(dateFormatter.string(from: newEntryDate))
                         .frame(maxWidth: .infinity, alignment: .trailing)
@@ -91,4 +94,5 @@ struct NewEntry: View {
 
 #Preview {
     NewEntry()
+        .modelContainer(for: ReviewModel.self, inMemory: true)
 }

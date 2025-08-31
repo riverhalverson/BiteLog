@@ -6,13 +6,20 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 struct TileViewLarge: View {
     let edgePadding: CGFloat = 30
     
-    var reviewEntry: ReviewEntry
+    let review: ReviewModel
   
+    // Format date output
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter
+    }()
     
     var body: some View {
         ZStack{
@@ -20,7 +27,7 @@ struct TileViewLarge: View {
                 .ignoresSafeArea()
             
             VStack{
-                reviewEntry.image
+                Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
                     .resizable()
                     .scaledToFill()
                     .frame(width:380, height:380)
@@ -35,13 +42,13 @@ struct TileViewLarge: View {
                     .shadow(radius:6)
                 
                 
-                Text(reviewEntry.locationName)
+                Text(review.locationName)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.system(size:25, weight: .medium))
                     .padding(.leading, edgePadding)
                     .padding([.top,.bottom],6)
                 
-                Text(reviewEntry.review)
+                Text(review.reviewEntry)
                     .lineLimit(2)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.system(size:15, weight: .regular))
@@ -50,7 +57,7 @@ struct TileViewLarge: View {
                 
                 Spacer(minLength:50)
                 
-                Text(reviewEntry.date)
+                Text(dateFormatter.string(from: review.date))
                     .frame(maxWidth: .infinity, alignment: .trailing)
                     .font(.system(size:11, weight: .light))
                     .padding(.trailing, edgePadding)
@@ -70,10 +77,20 @@ struct TileViewLarge: View {
         
 }
 
-
 #Preview {
-    let reviewEntries = ModelData().reviewEntries
-    return Group{
-        TileViewLarge(reviewEntry: reviewEntries[2])
+    let container = ReviewModel.preview
+    return PreviewReviewLargeTile()
+        .modelContainer(container)
+}
+
+private struct PreviewReviewLargeTile: View {
+    @Query(sort: \ReviewModel.date) private var reviews: [ReviewModel]
+
+    var body: some View {
+        if let review = reviews.first {
+            TileViewLarge(review: review)
+        } else {
+            Text("No preview data available")
+        }
     }
 }

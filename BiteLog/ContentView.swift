@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     @State private var selection: Tab = .journal
     @State private var showingAddEntry = false
     @State private var showingMap = false
+    @State private var formType: ModelFormType?
     
     private var foreGroundColor: Color = .white
     private var buttonSize: CGFloat = 35
@@ -26,7 +28,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack{
             TileListView()
-                .environment(ModelData())
+                .modelContainer(ReviewModel.preview)
             
                 .toolbar{
                     // Map button
@@ -67,14 +69,13 @@ struct ContentView: View {
                     ToolbarItem(placement: .bottomBar){
                         VStack{
                             Button{
-                                withAnimation(.bouncy){
-                                    showingAddEntry.toggle()
-                                }
+                                formType = .new
                             } label: {
                                 Image(systemName: "person.crop.circle.fill")
                                     .font(.system(size:buttonSize, weight: .bold))
                                     .foregroundStyle(foreGroundColor)
                             }
+                            //.sheet(item: $formType) { $0 }
                         }
                         .frame(width:buttonFrameSize, height:buttonFrameSize)
                         .padding(.trailing, outerPadding)
@@ -84,13 +85,13 @@ struct ContentView: View {
 
         .sheet(isPresented: $showingAddEntry){
             NewEntry()
-                .environment(ModelData())
+                .modelContainer(ReviewModel.preview)
         }
 
         
         .sheet(isPresented: $showingMap){
             MapView()
-                .environment(ModelData())
+                .modelContainer(ReviewModel.preview)
                 .presentationDetents([.fraction(0.75)])
                 .presentationDragIndicator(.visible)
         }
@@ -100,6 +101,17 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .environment(ModelData())
+    let container = ReviewModel.preview
+    // Use a wrapper view to fetch the review *inside* the preview context
+    return PreviewReviewContentView()
+        .modelContainer(container)
+}
+
+private struct PreviewReviewContentView: View {
+    @Query(sort: \ReviewModel.date) private var reviews: [ReviewModel]
+
+    var body: some View {
+        ContentView()
+        
+    }
 }

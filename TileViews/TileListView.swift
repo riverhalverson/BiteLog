@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TileListView: View {
-    @Environment(ModelData.self) var modelData
+    @Query(sort: \ReviewModel.date) var reviews: [ReviewModel]
+    @Environment(\.modelContext) private var context
+    
     let columns = [GridItem(.fixed(180)), GridItem(.fixed(180))]
     
-    var reviewEntries: [ReviewEntry] = ModelData().reviewEntries
+    //var reviewEntries: [ReviewEntry] = ModelData().reviewEntries
   
     @Namespace private var namespace
     
@@ -26,12 +29,12 @@ struct TileListView: View {
             
             ScrollView(.vertical, showsIndicators: false){
                 LazyVGrid(columns: columns){
-                    ForEach(reviewEntries, id: \.self) { review in
+                    ForEach(reviews, id: \.self) { review in
                         NavigationLink{
-                            TileViewLarge(reviewEntry: review)
+                            TileViewLarge(review: review)
                                 .navigationTransition(.zoom(sourceID: review.id, in: namespace))
                         } label: {
-                            TileViewCompact(reviewEntry: review)
+                            TileViewCompact(review: review)
                                 .matchedTransitionSource(id: review.id, in: namespace)
                             
                         }
@@ -43,6 +46,16 @@ struct TileListView: View {
 }
 
 #Preview {
-    TileListView()
-        .environment(ModelData())
+    let container = ReviewModel.preview
+    
+    return PreviewReviewTileList()
+        .modelContainer(container)
+}
+
+private struct PreviewReviewTileList: View {
+    @Query(sort: \ReviewModel.date) private var reviews: [ReviewModel]
+
+    var body: some View {
+        TileListView()
+    }
 }

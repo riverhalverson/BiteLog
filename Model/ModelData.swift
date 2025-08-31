@@ -7,7 +7,7 @@
 
 import Foundation
 
-
+/*
 @Observable
 class ModelData{
     var reviewEntries: [ReviewEntry] = load(filename: "sampleEntries.json")
@@ -36,3 +36,4 @@ func load<T: Decodable>( filename: String) -> T {
     }
     
 }
+*/
