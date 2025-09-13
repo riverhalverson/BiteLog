@@ -34,8 +34,8 @@ struct TileListView: View {
     var body: some View {
         NavigationStack{
             let columns: [GridItem] = [
-                GridItem(.fixed(200), spacing:1),
-                GridItem(.fixed(200), spacing:1)
+                GridItem(.flexible(minimum:60, maximum:600), spacing:0.1),
+                GridItem(.flexible(minimum:60, maximum:600), spacing:0.1)
             ]
             
             ZStack{
@@ -43,7 +43,7 @@ struct TileListView: View {
                     .ignoresSafeArea()
                 
                 ScrollView(.vertical, showsIndicators: false){
-                    LazyVGrid(columns: columns){
+                    LazyVGrid(columns: columns, spacing: 0.1){
                         ForEach(reviews, id: \.self) { review in
                             NavigationLink{
                                 TileViewLarge(review: review)
@@ -52,11 +52,13 @@ struct TileListView: View {
                                     .navigationBarHidden(true)
                             } label: {
                                 TileViewCompact(review: review)
+                                    .padding(10)
                                     .matchedTransitionSource(id: review.id, in: namespace)
+                                    
                                 
                             }
                         }
-                    }
+                    }                    
                 }
             }
                 .toolbar{
@@ -89,23 +91,11 @@ struct TileListView: View {
                                     .font(.system(size:45, weight: .bold))
                                     .foregroundStyle(.cyan)
                             }
-                            
-                            /*
-                            Button{
-                                formType = .new
-                            } label: {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.system(size:45, weight: .bold))
-                                    .foregroundStyle(.cyan)
-                            }
-                            .sheet(item: $formType) { $0 }
-                             */
                         }
                         .frame(width:buttonFrameSize, height:buttonFrameSize)
                         .padding([.leading,.trailing], innerPadding)
                         .padding([.top, .bottom], outerPadding)
                     }
-                    // Profile button
                     ToolbarItem(placement: .bottomBar){
                         VStack{
                             Button{
@@ -121,8 +111,7 @@ struct TileListView: View {
                         .padding(.trailing, outerPadding)
                     }
                 }
-        }
-        
+        }        
         .sheet(isPresented: $showingMap){
             MapView()
                 .modelContainer(ReviewModel.preview)
