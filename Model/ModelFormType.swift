@@ -7,15 +7,18 @@
 
 import SwiftUI
 
-enum ModelFormType: View{
+enum ModelFormType: Identifiable, View{
     case new
     case update(ReviewModel)
+    var id: String {
+        String(describing: self)
+    }
     
     var body: some View {
         switch self {
-        case .new: EditEntry(vm:UpdateEditReviewModel())
+        case .new: EditEntry(viewModel:UpdateEditReviewModel())
             
-        case .update(let review): EditEntry(vm:UpdateEditReviewModel(review: review))
+        case .update(let review): EditEntry(viewModel:UpdateEditReviewModel(review: review))
         }
     }
     

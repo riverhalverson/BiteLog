@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
+struct TileListView: View {
     @State private var selection: Tab = .journal
     @State private var showingAddEntry = false
     @State private var showingMap = false
@@ -37,6 +37,7 @@ struct ContentView: View {
                 GridItem(.fixed(200), spacing:1),
                 GridItem(.fixed(200), spacing:1)
             ]
+            
             ZStack{
                 LinearGradient(gradient: Gradient(colors: gradientColors), startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
@@ -47,6 +48,8 @@ struct ContentView: View {
                             NavigationLink{
                                 TileViewLarge(review: review)
                                     .navigationTransition(.zoom(sourceID: review.id, in: namespace))
+                                    .navigationBarBackButtonHidden(true)
+                                    .navigationBarHidden(true)
                             } label: {
                                 TileViewCompact(review: review)
                                     .matchedTransitionSource(id: review.id, in: namespace)
@@ -56,7 +59,6 @@ struct ContentView: View {
                     }
                 }
             }
-            
                 .toolbar{
                     // Map button
                     ToolbarItem(placement: .bottomBar){
@@ -78,15 +80,26 @@ struct ContentView: View {
                     // Add entry button
                     ToolbarItem(placement: .bottomBar){
                         VStack{
-                            Button{
-                                withAnimation(.bouncy){
-                                    showingAddEntry.toggle()
-                                }
+                            NavigationLink{
+                                EditEntry(viewModel:UpdateEditReviewModel())
+                                    .navigationBarBackButtonHidden(true)
+                                    .navigationBarHidden(true)
                             } label: {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.system(size:45, weight: .bold))
                                     .foregroundStyle(.cyan)
                             }
+                            
+                            /*
+                            Button{
+                                formType = .new
+                            } label: {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size:45, weight: .bold))
+                                    .foregroundStyle(.cyan)
+                            }
+                            .sheet(item: $formType) { $0 }
+                             */
                         }
                         .frame(width:buttonFrameSize, height:buttonFrameSize)
                         .padding([.leading,.trailing], innerPadding)
@@ -102,19 +115,13 @@ struct ContentView: View {
                                     .font(.system(size:buttonSize, weight: .bold))
                                     .foregroundStyle(foreGroundColor)
                             }
-                            //.sheet(item: $formType) { $0 }
+                            .sheet(item: $formType) { $0 }
                         }
                         .frame(width:buttonFrameSize, height:buttonFrameSize)
                         .padding(.trailing, outerPadding)
                     }
                 }
         }
-
-        .sheet(isPresented: $showingAddEntry){
-            NewEntry()
-                .modelContainer(ReviewModel.preview)
-        }
-
         
         .sheet(isPresented: $showingMap){
             MapView()
@@ -130,15 +137,15 @@ struct ContentView: View {
 #Preview {
     let container = ReviewModel.preview
     // Use a wrapper view to fetch the review *inside* the preview context
-    return PreviewReviewContentView()
+    return PreviewReviewTileListView()
         .modelContainer(container)
 }
 
-private struct PreviewReviewContentView: View {
+private struct PreviewReviewTileListView: View {
     @Query(sort: \ReviewModel.date) private var reviews: [ReviewModel]
 
     var body: some View {
-        ContentView()
+        TileListView()
         
     }
 }

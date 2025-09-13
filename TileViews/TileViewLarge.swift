@@ -10,14 +10,19 @@ import SwiftData
 
 
 struct TileViewLarge: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @State private var formType: ModelFormType?
+    
     let edgePadding: CGFloat = 30
+    let verticalPadding: CGFloat = 10
     
     let review: ReviewModel
   
     // Format date output
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
+        formatter.timeStyle = .medium
         return formatter
     }()
     
@@ -26,50 +31,113 @@ struct TileViewLarge: View {
             LinearGradient(gradient: Gradient(colors: gradientColors), startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             
-            VStack{
-                Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width:380, height:380)
-                    .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius:20))
-                    .overlay(
-                        RoundedRectangle(cornerRadius:20)
-                            .stroke(.frameStroke, lineWidth:2)
-                    )
-                    .padding([.leading,.trailing], edgePadding)
-                    .padding(.top, edgePadding)
-                    .shadow(radius:6)
-                
-                
-                Text(review.locationName)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.system(size:25, weight: .medium))
-                    .padding(.leading, edgePadding)
-                    .padding([.top,.bottom],6)
-                
-                Text(review.reviewEntry)
-                    .lineLimit(2)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .font(.system(size:15, weight: .regular))
-                    .padding([.leading,.trailing], edgePadding)
-                    .padding([.top,.bottom],3)
-                
-                Spacer(minLength:50)
-                
-                Text(dateFormatter.string(from: review.date))
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .font(.system(size:11, weight: .light))
-                    .padding(.trailing, edgePadding)
-                    .padding(.bottom, 5)
-                    .opacity(0.3)
-                
-                
-                Divider()
-                
-                MapView()
-                    .ignoresSafeArea(.all)
+            ScrollView{
+                VStack{
+                    Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
+                        .resizable()
+                        .scaledToFill()
+                        //.frame(width:380, height:380)
+                        .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius:20))
+                        .overlay(
+                            RoundedRectangle(cornerRadius:20)
+                                .stroke(.frameStroke, lineWidth:2)
+                        )
+                        .padding([.leading,.trailing], edgePadding)
+                        .shadow(radius:6)
                     
+                    Text("Where you were")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size:12, weight: .light))
+                        .foregroundColor(.secondary)
+                        .padding(.leading, edgePadding)
+                        .padding(.top, verticalPadding)
+                        .opacity(0.5)
+                        
+                    Text(review.locationName)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size:25, weight: .medium))
+                        .padding(.leading, edgePadding)
+                        .padding(.bottom, verticalPadding)
+                    
+                    Text("What you had")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size:12, weight: .light))
+                        .foregroundColor(.secondary)
+                        .padding(.leading, edgePadding)
+                        .padding(.top, verticalPadding)
+                        .opacity(0.5)
+                    
+                    Text(review.food)
+                        .lineLimit(2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size:18, weight: .medium))
+                        .padding([.leading,.trailing], edgePadding)
+                        .padding(.bottom, verticalPadding)
+                    
+                    Text("Your thoughts")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size:12, weight: .light))
+                        .foregroundColor(.secondary)
+                        .padding(.leading, edgePadding)
+                        .padding(.top, verticalPadding)
+                        .opacity(0.5)
+                    
+                    Text(review.reviewEntry)
+                        .lineLimit(2)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .font(.system(size:15, weight: .regular))
+                        .padding([.leading,.trailing], edgePadding)
+                        .padding(.bottom, verticalPadding)
+                    
+                    Spacer(minLength:50)
+                    
+                    Text(dateFormatter.string(from: review.date))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .font(.system(size:11, weight: .light))
+                        .padding(.trailing, edgePadding)
+                        .padding(.bottom, verticalPadding)
+                        .opacity(0.3)
+                    
+                    
+                    Divider()
+                    
+                    MapView()
+                        //.frame(width:380, height: 500)
+                        .aspectRatio(CGSize(width:4, height:7), contentMode: .fit)
+                        .clipShape(RoundedRectangle(cornerRadius:20))
+                        .padding([.leading,.trailing], edgePadding)
+                }
+                
+                .toolbar{
+                    ToolbarItem(placement: .bottomBar){
+                        Button("Back"){
+                            dismiss()
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .bottomBar){
+                        
+                        NavigationLink{
+                            EditEntry(viewModel:UpdateEditReviewModel(review: review))
+                                .navigationBarBackButtonHidden(true)
+                                .navigationBarHidden(true)
+                                
+                        } label: {
+                            Text("Edit")
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .bottomBar){
+                        Button("Delete"){
+                            modelContext.delete(review)
+                            try? modelContext.save()
+                            dismiss()
+                        }
+                        
+                    }
+                    
+                }
             }
         }
 

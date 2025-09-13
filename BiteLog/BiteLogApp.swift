@@ -12,7 +12,7 @@ import SwiftData
 struct BiteLogApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TileListView()
                 .modelContainer(for: ReviewModel.self)
         }
     }

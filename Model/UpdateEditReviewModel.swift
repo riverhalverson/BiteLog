@@ -12,10 +12,12 @@ import UIKit
 class UpdateEditReviewModel{
     var id = UUID()
     var locationName: String = ""
+    var food: String = ""
     var reviewEntry: String = ""
     var date: Date = Date()
     
     var imageData: Data?
+    var cameraImage: UIImage?
     
     var review: ReviewModel?
     
@@ -32,6 +34,8 @@ class UpdateEditReviewModel{
         self.review = review
         self.id = review.id
         self.locationName = review.locationName
+        self.food = review.food
+        self.reviewEntry = review.reviewEntry
         self.date = review.date
         self.imageData = review.imageData
         

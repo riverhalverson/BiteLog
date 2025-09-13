@@ -21,7 +21,7 @@ struct TileViewCompact: View {
     // Format date output
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
+        formatter.timeStyle = .medium
         return formatter
     }()
     
@@ -32,7 +32,7 @@ struct TileViewCompact: View {
             Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
                 .resizable()
                 .frame(width:160, height:160)
-                .aspectRatio(CGSize(width:4,height:4), contentMode: .fill)
+                .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius:20))
                 .overlay(
                     RoundedRectangle(cornerRadius:20)
@@ -89,7 +89,6 @@ private struct PreviewReviewCompactTile: View {
     @Query(sort: \ReviewModel.date) private var reviews: [ReviewModel]
 
     var body: some View {
-        // Always check array bounds!
         if let review = reviews.first {
             TileViewCompact(review: review)
         } else {
