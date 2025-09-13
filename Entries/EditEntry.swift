@@ -41,113 +41,117 @@ struct EditEntry: View {
             
             ScrollView{
                 VStack{
-                    ZStack {
-                        Image(uiImage: viewModel.image)
-                            .resizable()
-                            .scaledToFill()
-                            //.frame(width:380, height:380)
-                            .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
-                            .clipShape(RoundedRectangle(cornerRadius:20))
-                            .overlay(
-                                RoundedRectangle(cornerRadius:20)
-                                    .stroke(.frameStroke, lineWidth:2)
-                            )
-                            .padding([.leading,.trailing], edgePadding)
-                            .shadow(radius:6)
-                    }
-                    HStack{
-                        Button{
-                            if let error = CameraPermission.checkPermissions(){
-                                cameraError = error
-                            } else{
-                                showCamera.toggle()
-                            }
-                        } label: {
-                            Text("Camera")
-                                .padding([.top, .bottom], 5)
-                                .padding([.leading, .trailing], 10)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.blue.opacity(0.6))
+                    VStack{
+                        ZStack {
+                            Image(uiImage: viewModel.image)
+                                .resizable()
+                                .scaledToFill()
+                                .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
+                                .clipShape(RoundedRectangle(cornerRadius:20))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius:20)
+                                        .stroke(.frameStroke, lineWidth:2)
+                                )
+                                //.padding([.leading,.trailing], edgePadding)
+                                .shadow(radius:6)
+                        }
+                        HStack{
+                            Button{
+                                if let error = CameraPermission.checkPermissions(){
+                                    cameraError = error
+                                } else{
+                                    showCamera.toggle()
+                                }
+                            } label: {
+                                Text("Camera")
+                                    .padding([.top, .bottom], 5)
+                                    .padding([.leading, .trailing], 10)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(Color.blue.opacity(0.6))
                                     )
-                                .foregroundStyle(Color.white)
-                        }
-                        .alert(isPresented: .constant(cameraError != nil), error: cameraError){
-                            _ in Button("OK") {
-                                cameraError = nil
+                                    .foregroundStyle(Color.white)
                             }
-                        } message: { error in
-                            Text(error.recoverySuggestion ?? "Try again later")
+                            .alert(isPresented: .constant(cameraError != nil), error: cameraError){
+                                _ in Button("OK") {
+                                    cameraError = nil
+                                }
+                            } message: { error in
+                                Text(error.recoverySuggestion ?? "Try again later")
+                            }
+                            .sheet(isPresented: $showCamera) {
+                                UIKitCamera(selectedImage: $viewModel.cameraImage)
+                                    .ignoresSafeArea()
+                            }
+                            
+                            PhotosPicker(selection: $imagePicker.imageSelection){
+                                Label("Select a Photo", systemImage: "photo")
+                                    .padding([.top, .bottom], 5)
+                                    .padding([.leading, .trailing], 10)
+                                    .background(
+                                        RoundedRectangle(cornerRadius:10)
+                                            .fill(Color.blue.opacity(0.6))
+                                    )
+                                    .foregroundStyle(Color.white)
+                                    .safeAreaPadding()
+                            }
                         }
-                        .sheet(isPresented: $showCamera) {
-                            UIKitCamera(selectedImage: $viewModel.cameraImage)
-                                .ignoresSafeArea()
+                        //.padding(.top, verticalPadding)
+                        
+                        
+                        TextField("Location", text: $viewModel.locationName)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        //.padding([.leading,.trailing], edgePadding)
+                            //.padding([.top, .bottom], textVerticalPadding)
+                            .focused($isKeyboardShowing)
+                            .focused($focusField, equals: .location)
+                            .onSubmit{
+                                focusField = .food
+                            }
+                        
+                        
+                        
+                        TextField("What did you have?", text: $viewModel.food, axis: .vertical)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            //.padding([.leading, .trailing], edgePadding)
+                            //.padding([.top, .bottom], textVerticalPadding)
+                            .focused($isKeyboardShowing)
+                            .focused($focusField, equals: .food)
+                            .onSubmit{
+                                focusField = .review
+                            }
+                        
+                        
+                        
+                        TextField("Review", text: $viewModel.reviewEntry, axis: .vertical)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            //.padding([.leading, .trailing], edgePadding)
+                            //.padding([.top, .bottom], textVerticalPadding)
+                            .focused($isKeyboardShowing)
+                            .focused($focusField, equals: .review)
+                            .onSubmit{
+                                focusField = nil
+                            }
+                        
+                        
+                        Spacer(minLength:50)
+                        
+                        HStack{
+                            Spacer()
+                            
+                            Text(dateFormatter.string(from: viewModel.date))
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .font(.system(size:11, weight: .light))
+                                //.padding(.trailing, edgePadding)
+                                //.padding(.bottom, verticalPadding)
+                                .opacity(0.3)
                         }
                         
-                        PhotosPicker(selection: $imagePicker.imageSelection){
-                            Label("Select a Photo", systemImage: "photo")
-                                .padding([.top, .bottom], 5)
-                                .padding([.leading, .trailing], 10)
-                                .background(
-                                    RoundedRectangle(cornerRadius:10)
-                                        .fill(Color.blue.opacity(0.6))
-                                )
-                                .foregroundStyle(Color.white)
-                                .safeAreaPadding()
-                        }
                     }
-                    .padding(.top, verticalPadding)
-                    
-              
-                    TextField("Location", text: $viewModel.locationName)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.leading,.trailing], edgePadding)
-                        .padding([.top, .bottom], textVerticalPadding)
-                        .focused($isKeyboardShowing)
-                        .focused($focusField, equals: .location)
-                        .onSubmit{
-                            focusField = .food
-                        }
-                    
-                    
-                    
-                    TextField("What did you have?", text: $viewModel.food, axis: .vertical)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.leading, .trailing], edgePadding)
-                        .padding([.top, .bottom], textVerticalPadding)
-                        .focused($isKeyboardShowing)
-                        .focused($focusField, equals: .food)
-                        .onSubmit{
-                            focusField = .review
-                        }
-                    
-                    
-                    
-                    TextField("Review", text: $viewModel.reviewEntry, axis: .vertical)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding([.leading, .trailing], edgePadding)
-                        .padding([.top, .bottom], textVerticalPadding)
-                        .focused($isKeyboardShowing)
-                        .focused($focusField, equals: .review)
-                        .onSubmit{
-                            focusField = nil
-                        }
-                    
-                    
-                    Spacer(minLength:50)
-                    
-                    HStack{
-                        Text(dateFormatter.string(from: viewModel.date))
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .font(.system(size:11, weight: .light))
-                            .padding(.trailing, edgePadding)
-                            .padding(.bottom, verticalPadding)
-                            .opacity(0.3)
-                    }
-                    
+                    .padding(20)
                     Divider()
                     
                     MapView()
