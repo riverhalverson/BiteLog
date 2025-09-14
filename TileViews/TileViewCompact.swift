@@ -31,14 +31,12 @@ struct TileViewCompact: View {
             // The reviews image
             Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
                 .resizable()
-                .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
+                .aspectRatio(CGSize(width:3,height:4), contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius:20))
                 .overlay(
                     RoundedRectangle(cornerRadius:20)
                         .stroke(.frameStroke, lineWidth:2)
                 )
-                //.padding([.leading, .trailing], edgePadding)
-                //.padding(.top, edgePadding)
                 .shadow(color:.shadow,radius:3)
         
             VStack{
@@ -49,7 +47,6 @@ struct TileViewCompact: View {
                  
                     Spacer()
                 }
-                //.padding(.leading, edgePadding)
                 .padding(.bottom, 1)
                 
                 HStack{
@@ -60,7 +57,6 @@ struct TileViewCompact: View {
                  
                     Spacer()
                 }
-                //.padding(.leading, edgePadding)
                 .padding(.bottom, 3)
             }
                         
@@ -70,8 +66,6 @@ struct TileViewCompact: View {
                 // Review Entry Date in lower right corner
                 Text(dateFormatter.string(from: review.date))
                     .font(.system(size:11, weight: .light))
-                    //.padding(.trailing, edgePadding)
-                    //.padding(.bottom, edgePadding)
                     .opacity(0.5)
             }
         }
@@ -81,7 +75,6 @@ struct TileViewCompact: View {
                 .fill(LinearGradient(gradient: Gradient(colors: gradientColors), startPoint: .top, endPoint: .bottom))
                 .stroke(.frameStroke, lineWidth:2)
                 .shadow(color:.shadow.opacity(0.6)  , radius:3)
-                
         }
     }
 }

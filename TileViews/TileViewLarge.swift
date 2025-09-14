@@ -35,61 +35,65 @@ struct TileViewLarge: View {
                 VStack{
                     Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
                         .resizable()
-                        .scaledToFill()
-                        //.frame(width:380, height:380)
-                        .aspectRatio(CGSize(width:4,height:4), contentMode: .fit)
+                        .aspectRatio(CGSize(width:3,height:4), contentMode: .fit)
                         .clipShape(RoundedRectangle(cornerRadius:20))
                         .overlay(
                             RoundedRectangle(cornerRadius:20)
                                 .stroke(.frameStroke, lineWidth:2)
                         )
-                        .padding([.leading,.trailing], edgePadding)
                         .shadow(radius:6)
                     
-                    Text("Where you were")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size:12, weight: .light))
-                        .foregroundColor(.secondary)
-                        .padding(.leading, edgePadding)
-                        .padding(.top, verticalPadding)
-                        .opacity(0.5)
-                        
-                    Text(review.locationName)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size:25, weight: .medium))
-                        .padding(.leading, edgePadding)
-                        .padding(.bottom, verticalPadding)
-                    
-                    Text("What you had")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size:12, weight: .light))
-                        .foregroundColor(.secondary)
-                        .padding(.leading, edgePadding)
-                        .padding(.top, verticalPadding)
-                        .opacity(0.5)
-                    
-                    Text(review.food)
-                        .lineLimit(2)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size:18, weight: .medium))
-                        .padding([.leading,.trailing], edgePadding)
-                        .padding(.bottom, verticalPadding)
-                    
-                    Text("Your thoughts")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size:12, weight: .light))
-                        .foregroundColor(.secondary)
-                        .padding(.leading, edgePadding)
-                        .padding(.top, verticalPadding)
-                        .opacity(0.5)
-                    
-                    Text(review.reviewEntry)
-                        .lineLimit(2)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size:15, weight: .regular))
-                        .padding([.leading,.trailing], edgePadding)
-                        .padding(.bottom, verticalPadding)
-                    
+                    VStack{
+                        HStack{
+                            VStack{
+                                Text("Where you were")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size:12, weight: .light))
+                                    .foregroundColor(.secondary)
+                                    .padding(.top, verticalPadding)
+                                    .opacity(0.5)
+                                
+                                Text(review.locationName)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size:25, weight: .medium))
+                                    .padding(.bottom, verticalPadding)
+                            }
+                            Spacer()
+                        }
+                        HStack{
+                            VStack{
+                                Text("What you had")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size:12, weight: .light))
+                                    .foregroundColor(.secondary)
+                                    .padding(.top, verticalPadding)
+                                    .opacity(0.5)
+                                
+                                Text(review.food)
+                                    .lineLimit(2)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size:18, weight: .medium))
+                                    .padding(.bottom, verticalPadding)
+                            }
+                            Spacer()
+                        }
+                        HStack{
+                            VStack{
+                                Text("Your thoughts")
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size:12, weight: .light))
+                                    .foregroundColor(.secondary)
+                                    .padding(.top, verticalPadding)
+                                    .opacity(0.5)
+                                
+                                Text(review.reviewEntry)
+                                    .lineLimit(2)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size:15, weight: .regular))
+                                    .padding(.bottom, verticalPadding)
+                            }
+                        }
+                    }
                     Spacer(minLength:50)
                     
                     Text(dateFormatter.string(from: review.date))
@@ -103,12 +107,10 @@ struct TileViewLarge: View {
                     Divider()
                     
                     MapView()
-                        //.frame(width:380, height: 500)
                         .aspectRatio(CGSize(width:4, height:7), contentMode: .fit)
                         .clipShape(RoundedRectangle(cornerRadius:20))
-                        .padding([.leading,.trailing], edgePadding)
                 }
-                
+                .padding([.leading, .trailing], 25)
                 .toolbar{
                     ToolbarItem(placement: .bottomBar){
                         Button("Back"){
