@@ -48,14 +48,14 @@ struct TileViewLarge: View {
                             VStack{
                                 Text("Where you were")
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size:12, weight: .light))
+                                    .font(.caption)
                                     .foregroundColor(.secondary)
                                     .padding(.top, verticalPadding)
                                     .opacity(0.5)
                                 
                                 Text(review.locationName)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size:25, weight: .medium))
+                                    .font(.title)
                                     .padding(.bottom, verticalPadding)
                             }
                             Spacer()
@@ -64,7 +64,7 @@ struct TileViewLarge: View {
                             VStack{
                                 Text("What you had")
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size:12, weight: .light))
+                                    .font(.caption)
                                     .foregroundColor(.secondary)
                                     .padding(.top, verticalPadding)
                                     .opacity(0.5)
@@ -72,7 +72,7 @@ struct TileViewLarge: View {
                                 Text(review.food)
                                     .lineLimit(2)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size:18, weight: .medium))
+                                    .font(.title2)
                                     .padding(.bottom, verticalPadding)
                             }
                             Spacer()
@@ -81,7 +81,7 @@ struct TileViewLarge: View {
                             VStack{
                                 Text("Your thoughts")
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size:12, weight: .light))
+                                    .font(.caption)
                                     .foregroundColor(.secondary)
                                     .padding(.top, verticalPadding)
                                     .opacity(0.5)
@@ -89,7 +89,7 @@ struct TileViewLarge: View {
                                 Text(review.reviewEntry)
                                     .lineLimit(2)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size:15, weight: .regular))
+                                    .font(.title2)
                                     .padding(.bottom, verticalPadding)
                             }
                         }
@@ -98,11 +98,9 @@ struct TileViewLarge: View {
                     
                     Text(dateFormatter.string(from: review.date))
                         .frame(maxWidth: .infinity, alignment: .trailing)
-                        .font(.system(size:11, weight: .light))
-                        .padding(.trailing, edgePadding)
+                        .font(.caption)
                         .padding(.bottom, verticalPadding)
                         .opacity(0.3)
-                    
                     
                     Divider()
                     

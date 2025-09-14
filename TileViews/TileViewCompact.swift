@@ -43,7 +43,7 @@ struct TileViewCompact: View {
                 HStack{
                     Text(review.locationName)
                         .frame(maxWidth: tileWidth, alignment: .leading)
-                        .font(.system(size:20, weight: .medium))
+                        .font(.title3.bold())
                  
                     Spacer()
                 }
@@ -53,7 +53,7 @@ struct TileViewCompact: View {
                     Text(review.reviewEntry)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
-                        .font(.system(size:12, weight: .regular))
+                        .font(.body)
                  
                     Spacer()
                 }
@@ -65,7 +65,7 @@ struct TileViewCompact: View {
                 
                 // Review Entry Date in lower right corner
                 Text(dateFormatter.string(from: review.date))
-                    .font(.system(size:11, weight: .light))
+                    .font(.caption)
                     .opacity(0.5)
             }
         }
