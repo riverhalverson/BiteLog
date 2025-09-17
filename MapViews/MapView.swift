@@ -9,8 +9,12 @@ import SwiftUI
 import MapKit
 
 struct MapView: View {
+    @State private var cameraPosition: MapCameraPosition = .automatic
+    
     var body: some View {
-        Map(position: .constant(.region(region)))
+        Map(position: $cameraPosition){
+            Marker("Home", coordinate: CLLocationCoordinate2D(latitude: 34.011_286, longitude: -116.166_868))
+        }
     }
     
     private var region: MKCoordinateRegion {
