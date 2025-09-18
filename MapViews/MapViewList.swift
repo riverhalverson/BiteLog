@@ -1,15 +1,15 @@
 //
-//  MapView.swift
+//  MapList.swift
 //  BiteLog
 //
-//  Created by River Halverson on 8/18/25.
+//  Created by River Halverson on 8/23/25.
 //
 
 import SwiftUI
 import MapKit
 import SwiftData
 
-struct MapView: View {
+struct MapViewList: View {
     @State private var cameraPosition: MapCameraPosition = .automatic
     @State private var visibleRegion: MKCoordinateRegion?
     @Query private var reviews: [ReviewModel]
@@ -17,6 +17,13 @@ struct MapView: View {
     
     var body: some View {
         Map(position: $cameraPosition){
+            //if let review {
+                ForEach(reviews) { review in
+                    Marker(coordinate: review.coordinate){
+                        Label(review.locationName, systemImage: "star.fill")
+                    }
+                    
+                }
             
         }
         .onMapCameraChange(frequency: .onEnd){ context in
@@ -34,6 +41,6 @@ struct MapView: View {
 
 
 #Preview {
-    MapView()
+    MapViewList()
         .modelContainer(ReviewModel.preview)
 }

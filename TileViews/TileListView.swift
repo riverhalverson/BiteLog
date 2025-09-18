@@ -113,7 +113,7 @@ struct TileListView: View {
                 }
         }        
         .sheet(isPresented: $showingMap){
-            MapView()
+            MapViewList()
                 .modelContainer(ReviewModel.preview)
                 .presentationDetents([.fraction(0.75)])
                 .presentationDragIndicator(.visible)

@@ -28,6 +28,11 @@ class UpdateEditReviewModel{
             return Constants.placeholder
         }
     }
+    
+    var latitude: Double?
+    var longitude: Double?
+    var latitudeDelta: Double?
+    var longitudeDelta: Double?
  
     init() {}
     init(review: ReviewModel) {
@@ -38,6 +43,10 @@ class UpdateEditReviewModel{
         self.reviewEntry = review.reviewEntry
         self.date = review.date
         self.imageData = review.imageData
+        self.latitude = review.latitude
+        self.longitude = review.longitude
+        self.latitudeDelta = review.latitudeDelta
+        self.longitudeDelta = review.longitudeDelta
         
     }
     

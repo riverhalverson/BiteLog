@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import PhotosUI
+import MapKit
 
 struct EditEntry: View {
     @Environment(\.dismiss) private var dismiss
@@ -168,7 +169,7 @@ struct EditEntry: View {
                                     dismiss()
                                 }
                             } else {
-                                let newReview = ReviewModel(id: viewModel.id, locationName: viewModel.locationName, food: viewModel.food, reviewEntry: viewModel.reviewEntry, date: viewModel.date)
+                                let newReview = ReviewModel(id: viewModel.id, locationName: viewModel.locationName, food: viewModel.food, reviewEntry: viewModel.reviewEntry, date: viewModel.date, latitude: 37.7749, longitude: -122.0070)
                                 if viewModel.image != Constants.placeholder {
                                     newReview.imageData = viewModel.image.jpegData(compressionQuality: 0.8)
                                 }
