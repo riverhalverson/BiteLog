@@ -13,7 +13,7 @@ struct BiteLogApp: App {
     var body: some Scene {
         WindowGroup {
             TileListView()
-                .modelContainer(for: ReviewModel.self)
         }
+        .modelContainer(for: [ReviewModel.self])
     }
 }

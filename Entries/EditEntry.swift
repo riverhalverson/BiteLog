@@ -13,10 +13,20 @@ import MapKit
 struct EditEntry: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    
     @State var viewModel: UpdateEditReviewModel
     @State private var imagePicker = ImagePicker()
     @State private var showCamera = false
     @State private var cameraError: CameraPermission.CameraError?
+    
+    @State private var mapCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
+    @State private var isShowingLocationSearch: Bool = false
+    
+    @State var locationSearchViewModel = LocationSearchService()
+    
+    @FocusState private var scrollToLocationBox: Bool
+    @FocusState private var scrollToFoodBox: Bool
+    @FocusState private var scrollToReviewBox: Bool
     
     @FocusState private var isKeyboardShowing: Bool
     @FocusState private var focusField: Field?
@@ -24,12 +34,15 @@ struct EditEntry: View {
     let edgePadding: CGFloat = 30
     let verticalPadding: CGFloat = 5
     let textVerticalPadding: CGFloat = 10
+    let scrollAnchor: UnitPoint = UnitPoint(x: 0.0, y: 1.0)
     
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return formatter
     }()
+    
+    
     
     enum Field{
         case location, food, review
@@ -40,158 +53,217 @@ struct EditEntry: View {
             LinearGradient(gradient: Gradient(colors: gradientColors), startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             
-            ScrollView{
-                VStack{
+            ScrollViewReader{ reader in
+                ScrollView{
                     VStack{
-                        ZStack {
-                            Image(uiImage: viewModel.image)
-                                .resizable()
-                                .aspectRatio(CGSize(width:3,height:4), contentMode: .fit)
-                                .clipShape(RoundedRectangle(cornerRadius:20))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius:20)
-                                        .stroke(.frameStroke, lineWidth:2)
-                                )
-                                .shadow(radius:6)
-                        }
-                        HStack{
-                            Button{
-                                if let error = CameraPermission.checkPermissions(){
-                                    cameraError = error
-                                } else{
-                                    showCamera.toggle()
-                                }
-                            } label: {
-                                Text("Camera")
-                                    .padding([.top, .bottom], 5)
-                                    .padding([.leading, .trailing], 10)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .fill(Color.blue.opacity(0.6))
+                        VStack{
+                            ZStack {
+                                Image(uiImage: viewModel.image)
+                                    .resizable()
+                                    .aspectRatio(CGSize(width:3,height:4), contentMode: .fit)
+                                    .clipShape(RoundedRectangle(cornerRadius:20))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius:20)
+                                            .stroke(.frameStroke, lineWidth:2)
                                     )
-                                    .foregroundStyle(Color.white)
+                                    .shadow(radius:6)
                             }
-                            .alert(isPresented: .constant(cameraError != nil), error: cameraError){
-                                _ in Button("OK") {
-                                    cameraError = nil
-                                }
-                            } message: { error in
-                                Text(error.recoverySuggestion ?? "Try again later")
-                            }
-                            .sheet(isPresented: $showCamera) {
-                                UIKitCamera(selectedImage: $viewModel.cameraImage)
-                                    .ignoresSafeArea()
-                            }
-                            
-                            PhotosPicker(selection: $imagePicker.imageSelection){
-                                Label("Select a Photo", systemImage: "photo")
-                                    .padding([.top, .bottom], 5)
-                                    .padding([.leading, .trailing], 10)
-                                    .background(
-                                        RoundedRectangle(cornerRadius:10)
-                                            .fill(Color.blue.opacity(0.6))
-                                    )
-                                    .foregroundStyle(Color.white)
-                                    .safeAreaPadding()
-                            }
-                        }
-
-                        TextField("Location", text: $viewModel.locationName)
-                            .textFieldStyle(.roundedBorder)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .focused($isKeyboardShowing)
-                            .focused($focusField, equals: .location)
-                            .onSubmit{
-                                focusField = .food
-                            }
-                        
-                        TextField("What did you have?", text: $viewModel.food, axis: .vertical)
-                            .textFieldStyle(.roundedBorder)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .focused($isKeyboardShowing)
-                            .focused($focusField, equals: .food)
-                            .onSubmit{
-                                focusField = .review
-                            }
-                        
-                        TextField("Review", text: $viewModel.reviewEntry, axis: .vertical)
-                            .textFieldStyle(.roundedBorder)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .focused($isKeyboardShowing)
-                            .focused($focusField, equals: .review)
-                            .onSubmit{
-                                focusField = nil
-                            }
-                        
-                        Spacer(minLength:50)
-                        
-                        HStack{
-                            Spacer()
-                            
-                            Text(dateFormatter.string(from: viewModel.date))
-                                .frame(maxWidth: .infinity, alignment: .trailing)
-                                .font(.system(size:11, weight: .light))
-                                .opacity(0.3)
-                        }
-                    }
-                    .padding([.leading, .trailing], 25)
-                    Divider()
-                    
-                    MapView()
-                        //.frame(width:380, height: 500)
-                        .aspectRatio(CGSize(width:4, height:7), contentMode: .fit)
-                        .clipShape(RoundedRectangle(cornerRadius:20))
-                        .padding([.leading,.trailing], edgePadding)
-                }
-                .onTapGesture{
-                    isKeyboardShowing = false
-                }
-                .toolbar {
-                    ToolbarItem(placement: .bottomBar) {
-                        Button("Cancel") {
-                            dismiss()
-                        }
-                    }
-                    ToolbarItem(placement: .bottomBar) {
-                        Button {
-                            if viewModel.isUpDating {
-                                if let review = viewModel.review {
-                                    if viewModel.image != Constants.placeholder {
-                                        review.imageData = viewModel.image.jpegData(compressionQuality: 0.8)
-                                    } else {
-                                        review.imageData = nil
+                            HStack{
+                                Button{
+                                    if let error = CameraPermission.checkPermissions(){
+                                        cameraError = error
+                                    } else{
+                                        showCamera.toggle()
                                     }
-                                    review.id = viewModel.id
-                                    review.locationName = viewModel.locationName
-                                    review.food = viewModel.food
-                                    review.reviewEntry = viewModel.reviewEntry
-                                    review.date = viewModel.date
-                                    dismiss()
+                                } label: {
+                                    Text("Camera")
+                                        .padding([.top, .bottom], 5)
+                                        .padding([.leading, .trailing], 10)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .fill(Color.blue.opacity(0.6))
+                                        )
+                                        .foregroundStyle(Color.white)
                                 }
-                            } else {
-                                let newReview = ReviewModel(id: viewModel.id, locationName: viewModel.locationName, food: viewModel.food, reviewEntry: viewModel.reviewEntry, date: viewModel.date, latitude: 37.7749, longitude: -122.0070)
-                                if viewModel.image != Constants.placeholder {
-                                    newReview.imageData = viewModel.image.jpegData(compressionQuality: 0.8)
+                                .alert(isPresented: .constant(cameraError != nil), error: cameraError){
+                                    _ in Button("OK") {
+                                        cameraError = nil
+                                    }
+                                } message: { error in
+                                    Text(error.recoverySuggestion ?? "Try again later")
                                 }
-                                else {
-                                    newReview.imageData = nil
+                                .sheet(isPresented: $showCamera) {
+                                    UIKitCamera(selectedImage: $viewModel.cameraImage)
+                                        .ignoresSafeArea()
                                 }
-                                modelContext.insert(newReview)
+                                
+                                PhotosPicker(selection: $imagePicker.imageSelection){
+                                    Label("Select a Photo", systemImage: "photo")
+                                        .padding([.top, .bottom], 5)
+                                        .padding([.leading, .trailing], 10)
+                                        .background(
+                                            RoundedRectangle(cornerRadius:10)
+                                                .fill(Color.blue.opacity(0.6))
+                                        )
+                                        .foregroundStyle(Color.white)
+                                        .safeAreaPadding()
+                                }
+                            }
+                            
+                            TextField("Location", text: $locationSearchViewModel.query)
+                                .id("locationScrollPoint")
+                                .textFieldStyle(.roundedBorder)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .focused($isKeyboardShowing)
+                                .focused($focusField, equals: .location)
+                                .focused($scrollToLocationBox)
+                                .searchable(text: $locationSearchViewModel.query)
+                                .onSubmit{
+                                    focusField = .food
+                                }
+                            
+                            if !locationSearchViewModel.results.isEmpty && focusField == .location {
+                                List(locationSearchViewModel.results) { result in
+                                    VStack(alignment: .leading) {
+                                        Text(result.title)
+                                        Text(result.subtitle)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    
+                                }
+                                .scrollContentBackground(.hidden)
+                                .frame(minHeight: 300)
+                            }
+                            
+                            TextField("What did you have?", text: $viewModel.food, axis: .vertical)
+                                .id("foodScrollPoint")
+                                .textFieldStyle(.roundedBorder)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding([.top, .bottom], 5)
+                                .focused($isKeyboardShowing)
+                                .focused($focusField, equals: .food)
+                                .focused($scrollToFoodBox)
+                                .onSubmit{
+                                    focusField = .review
+                                }
+                            
+                            TextField("Review", text: $viewModel.reviewEntry, axis: .vertical)
+                                .id("reviewScrollPoint")
+                                .textFieldStyle(.roundedBorder)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .focused($isKeyboardShowing)
+                                .focused($focusField, equals: .review)
+                                .focused($scrollToReviewBox)
+                                .onSubmit{
+                                    focusField = nil
+                                }
+                            /*
+                             Button{
+                             mapCameraPosition = .camera(MapCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 39.7749, longitude: -122.4194), distance: 5000))
+                             } label:
+                             {
+                             Text("Set map location")
+                             .padding(5)
+                             .background{
+                             RoundedRectangle(cornerRadius: 25)
+                             .fill(Color.blue)
+                             }
+                             }
+                             */
+                            
+                            Spacer(minLength:50)
+                            
+                            HStack{
+                                Spacer()
+                                
+                                Text(dateFormatter.string(from: viewModel.date))
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .font(.system(size:11, weight: .light))
+                                    .opacity(0.3)
+                            }
+                        }
+                        .padding([.leading, .trailing], 25)
+                        Divider()
+                        
+                        MapView(cameraPosition: $mapCameraPosition)
+                            .aspectRatio(CGSize(width:4, height:5), contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius:20))
+                            .padding([.leading,.trailing], edgePadding)
+                    }
+                    .onTapGesture{
+                        isKeyboardShowing = false
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .bottomBar) {
+                            Button("Cancel") {
                                 dismiss()
                             }
-                        } label: {
-                            Text(viewModel.isUpDating ? "Update" : "Add")
                         }
-                        .disabled(viewModel.isDisabled)
+                        ToolbarItem(placement: .bottomBar) {
+                            Button {
+                                if viewModel.isUpDating {
+                                    if let review = viewModel.review {
+                                        if viewModel.image != Constants.placeholder {
+                                            review.imageData = viewModel.image.jpegData(compressionQuality: 0.8)
+                                        } else {
+                                            review.imageData = nil
+                                        }
+                                        review.id = viewModel.id
+                                        review.locationName = viewModel.locationName
+                                        review.food = viewModel.food
+                                        review.reviewEntry = viewModel.reviewEntry
+                                        review.date = viewModel.date
+                                        dismiss()
+                                    }
+                                } else {
+                                    let newReview = ReviewModel(id: viewModel.id, locationName: viewModel.locationName, food: viewModel.food, reviewEntry: viewModel.reviewEntry, date: viewModel.date, latitude: 37.7749, longitude: -122.0070)
+                                    if viewModel.image != Constants.placeholder {
+                                        newReview.imageData = viewModel.image.jpegData(compressionQuality: 0.8)
+                                    }
+                                    else {
+                                        newReview.imageData = nil
+                                    }
+                                    modelContext.insert(newReview)
+                                    do {
+                                        try modelContext.save()
+                                    } catch{
+                                        print("SwiftData save failed: \(error)")
+                                    }
+                                    dismiss()
+                                }
+                            } label: {
+                                Text(viewModel.isUpDating ? "Update" : "Add")
+                            }
+                            .disabled(viewModel.isDisabled)
+                        }
                     }
                 }
-            }
-            .onAppear{
-                imagePicker.setup(viewModel)
-            }
-            .onChange(of: viewModel.cameraImage){
-                if let image = viewModel.cameraImage {
-                    viewModel.imageData = image.jpegData(compressionQuality: 0.8)
+                .onAppear{
+                    imagePicker.setup(viewModel)
+                    CLLocationManager().requestWhenInUseAuthorization()
+                    //mapCameraPosition = .userLocation(fallback: .automatic)
+                }
+                .onChange(of: focusField){ _, field in
+                    DispatchQueue.main.async{
+                        withAnimation{
+                            switch field{
+                            case .location:
+                                reader.scrollTo("locationScrollPoint", anchor: .center)
+                            case .food:
+                                reader.scrollTo("foodScrollPoint", anchor: .center)
+                            case .review:
+                                reader.scrollTo("reviewScrollPoint", anchor: .center)
+                            case .none:
+                                break
+                            }
+                        }
+                    }
+                }
+                .onChange(of: viewModel.cameraImage){
+                    if let image = viewModel.cameraImage {
+                        viewModel.imageData = image.jpegData(compressionQuality: 0.8)
+                    }
                 }
             }
         }

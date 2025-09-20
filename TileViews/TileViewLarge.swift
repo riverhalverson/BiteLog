@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import MapKit
 
 
 struct TileViewLarge: View {
@@ -104,9 +105,9 @@ struct TileViewLarge: View {
                     
                     Divider()
                     
-                    MapView()
-                        .aspectRatio(CGSize(width:4, height:7), contentMode: .fit)
-                        .clipShape(RoundedRectangle(cornerRadius:20))
+                    //MapView(cameraPosition: .userLocation(fallback: .automatic))
+                    //    .aspectRatio(CGSize(width:4, height:5), contentMode: .fit)
+                    //    .clipShape(RoundedRectangle(cornerRadius:20))
                 }
                 .padding([.leading, .trailing], 25)
                 .toolbar{

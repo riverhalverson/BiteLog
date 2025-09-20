@@ -10,11 +10,12 @@ import MapKit
 import SwiftData
 
 struct MapView: View {
-    @State private var cameraPosition: MapCameraPosition = .automatic
-    @State private var visibleRegion: MKCoordinateRegion?
+    @Binding var cameraPosition: MapCameraPosition
+    @State var visibleRegion: MKCoordinateRegion?
     @Query private var reviews: [ReviewModel]
     @State private var review: ReviewModel?
     
+        
     var body: some View {
         Map(position: $cameraPosition){
             
@@ -34,6 +35,7 @@ struct MapView: View {
 
 
 #Preview {
-    MapView()
-        .modelContainer(ReviewModel.preview)
+    
+    //MapView(cameraPosition: )
+    //    .modelContainer(ReviewModel.preview)
 }

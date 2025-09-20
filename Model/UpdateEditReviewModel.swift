@@ -29,8 +29,8 @@ class UpdateEditReviewModel{
         }
     }
     
-    var latitude: Double?
-    var longitude: Double?
+    var latitude: Double = 0
+    var longitude: Double = 0
     var latitudeDelta: Double?
     var longitudeDelta: Double?
  
