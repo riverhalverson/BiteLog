@@ -22,7 +22,7 @@ class LocationSearchService: NSObject {
     var status: SearchStatus = .idle
     var completer: MKLocalSearchCompleter
     
-    init(filter: MKPointOfInterestFilter = .excludingAll,
+    init(filter: MKPointOfInterestFilter = MKPointOfInterestFilter(including: [.bakery, .brewery, .cafe, .distillery, .foodMarket, .restaurant, .winery]),
          region: MKCoordinateRegion = MKCoordinateRegion(.world),
          types: MKLocalSearchCompleter.ResultType = [.pointOfInterest, .query, .address]){
         
