@@ -7,6 +7,7 @@
 
 import Foundation
 import MapKit
+import SwiftUI
 
 
 @Observable
@@ -21,6 +22,8 @@ class LocationSearchService: NSObject {
     var results: [LocationResult] = []
     var status: SearchStatus = .idle
     var completer: MKLocalSearchCompleter
+    
+    var currentRegion: MKCoordinateRegion = MKCoordinateRegion(.world)
     
     init(filter: MKPointOfInterestFilter = MKPointOfInterestFilter(including: [.bakery, .brewery, .cafe, .distillery, .foodMarket, .restaurant, .winery]),
          region: MKCoordinateRegion = MKCoordinateRegion(.world),
@@ -56,8 +59,10 @@ extension LocationSearchService: MKLocalSearchCompleterDelegate{
             LocationResult(title: result.title, subtitle: result.subtitle)
         })
         
+            results.removeAll { $0.subtitle.localizedCaseInsensitiveContains("Search nearby") }
             self.status = .result
     }
+
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         

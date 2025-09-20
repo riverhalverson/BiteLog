@@ -24,6 +24,7 @@ struct EditEntry: View {
     
     @State var locationSearchViewModel = LocationSearchService()
     
+    
     @FocusState private var scrollToLocationBox: Bool
     @FocusState private var scrollToFoodBox: Bool
     @FocusState private var scrollToReviewBox: Bool
@@ -49,6 +50,8 @@ struct EditEntry: View {
     }
     
     var body: some View {
+        
+        
         ZStack{
             LinearGradient(gradient: Gradient(colors: gradientColors), startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
@@ -99,6 +102,7 @@ struct EditEntry: View {
                                 
                                 PhotosPicker(selection: $imagePicker.imageSelection){
                                     Label("Select a Photo", systemImage: "photo")
+                                        .id("locationScrollPoint")
                                         .padding([.top, .bottom], 5)
                                         .padding([.leading, .trailing], 10)
                                         .background(
@@ -111,7 +115,7 @@ struct EditEntry: View {
                             }
                             
                             TextField("Location", text: $locationSearchViewModel.query)
-                                .id("locationScrollPoint")
+                                .id("foodScrollPoint")
                                 .textFieldStyle(.roundedBorder)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .focused($isKeyboardShowing)
@@ -137,7 +141,8 @@ struct EditEntry: View {
                             }
                             
                             TextField("What did you have?", text: $viewModel.food, axis: .vertical)
-                                .id("foodScrollPoint")
+                                .id("reviewScrollPoint")
+
                                 .textFieldStyle(.roundedBorder)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding([.top, .bottom], 5)
@@ -149,7 +154,6 @@ struct EditEntry: View {
                                 }
                             
                             TextField("Review", text: $viewModel.reviewEntry, axis: .vertical)
-                                .id("reviewScrollPoint")
                                 .textFieldStyle(.roundedBorder)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .focused($isKeyboardShowing)
@@ -242,18 +246,24 @@ struct EditEntry: View {
                 .onAppear{
                     imagePicker.setup(viewModel)
                     CLLocationManager().requestWhenInUseAuthorization()
-                    //mapCameraPosition = .userLocation(fallback: .automatic)
+                    //locationSearchViewModel.currentRegion = mapCameraPosition.region!
+                }
+                .onChange(of: mapCameraPosition){ _, newPosition in
+                    if let region = newPosition.region {
+                        locationSearchViewModel.currentRegion = region
+                    }
+                    
                 }
                 .onChange(of: focusField){ _, field in
                     DispatchQueue.main.async{
                         withAnimation{
                             switch field{
                             case .location:
-                                reader.scrollTo("locationScrollPoint", anchor: .center)
+                                reader.scrollTo("locationScrollPoint", anchor: .top)
                             case .food:
-                                reader.scrollTo("foodScrollPoint", anchor: .center)
+                                reader.scrollTo("foodScrollPoint", anchor: .top)
                             case .review:
-                                reader.scrollTo("reviewScrollPoint", anchor: .center)
+                                reader.scrollTo("reviewScrollPoint", anchor: .top)
                             case .none:
                                 break
                             }
