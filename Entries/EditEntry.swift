@@ -134,6 +134,11 @@ struct EditEntry: View {
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
                                     }
+                                    .onTapGesture{
+                                        print("Result: \(result)")
+                                        locationSearchViewModel.query = result.title
+                                        
+                                    }
                                     
                                 }
                                 .scrollContentBackground(.hidden)
@@ -214,14 +219,14 @@ struct EditEntry: View {
                                             review.imageData = nil
                                         }
                                         review.id = viewModel.id
-                                        review.locationName = viewModel.locationName
+                                        review.locationName = locationSearchViewModel.query
                                         review.food = viewModel.food
                                         review.reviewEntry = viewModel.reviewEntry
                                         review.date = viewModel.date
                                         dismiss()
                                     }
                                 } else {
-                                    let newReview = ReviewModel(id: viewModel.id, locationName: viewModel.locationName, food: viewModel.food, reviewEntry: viewModel.reviewEntry, date: viewModel.date, latitude: 37.7749, longitude: -122.0070)
+                                    let newReview = ReviewModel(id: viewModel.id, locationName: locationSearchViewModel.query, food: viewModel.food, reviewEntry: viewModel.reviewEntry, date: viewModel.date, latitude: 37.7749, longitude: -122.0070)
                                     if viewModel.image != Constants.placeholder {
                                         newReview.imageData = viewModel.image.jpegData(compressionQuality: 0.8)
                                     }

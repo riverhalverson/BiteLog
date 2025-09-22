@@ -17,11 +17,9 @@
 		578071AE2E53FEB300CA4EB1 /* TileViewLarge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578071AD2E53FEB300CA4EB1 /* TileViewLarge.swift */; };
 		5783524D2E7B36B4007A2B7F /* ReviewMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783524C2E7B36B4007A2B7F /* ReviewMarker.swift */; };
 		578352562E7C7A18007A2B7F /* LocationPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578352552E7C7A18007A2B7F /* LocationPermissions.swift */; };
-		578352582E7C7E44007A2B7F /* GetUserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578352572E7C7E44007A2B7F /* GetUserLocation.swift */; };
 		5783525B2E7D2DB4007A2B7F /* LocationSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783525A2E7D2DB4007A2B7F /* LocationSearchService.swift */; };
 		5783525D2E7D8F4B007A2B7F /* LocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783525C2E7D8F4B007A2B7F /* LocationSearchView.swift */; };
 		5783525F2E7D97A9007A2B7F /* LocationSearchMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783525E2E7D97A9007A2B7F /* LocationSearchMap.swift */; };
-		578352612E7D97D6007A2B7F /* LocationSearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578352602E7D97D6007A2B7F /* LocationSearchModel.swift */; };
 		578845E82E5A5FDB000D3CEE /* MapViewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578845E72E5A5FDB000D3CEE /* MapViewList.swift */; };
 		57C458B12E6334CC007B6F33 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C458B02E6334CC007B6F33 /* Constants.swift */; };
 		57C458B32E6340CE007B6F33 /* UpdateEditReviewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C458B22E6340CE007B6F33 /* UpdateEditReviewModel.swift */; };
@@ -40,11 +38,9 @@
 		578071AD2E53FEB300CA4EB1 /* TileViewLarge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileViewLarge.swift; sourceTree = "<group>"; };
 		5783524C2E7B36B4007A2B7F /* ReviewMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewMarker.swift; sourceTree = "<group>"; };
 		578352552E7C7A18007A2B7F /* LocationPermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissions.swift; sourceTree = "<group>"; };
-		578352572E7C7E44007A2B7F /* GetUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetUserLocation.swift; sourceTree = "<group>"; };
 		5783525A2E7D2DB4007A2B7F /* LocationSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchService.swift; sourceTree = "<group>"; };
 		5783525C2E7D8F4B007A2B7F /* LocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchView.swift; sourceTree = "<group>"; };
 		5783525E2E7D97A9007A2B7F /* LocationSearchMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchMap.swift; sourceTree = "<group>"; };
-		578352602E7D97D6007A2B7F /* LocationSearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchModel.swift; sourceTree = "<group>"; };
 		578845E72E5A5FDB000D3CEE /* MapViewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewList.swift; sourceTree = "<group>"; };
 		57A944212E5276E400EE3556 /* BiteLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BiteLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57C458B02E6334CC007B6F33 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -101,7 +97,6 @@
 				578071932E53EA2500CA4EB1 /* MapView.swift */,
 				578845E72E5A5FDB000D3CEE /* MapViewList.swift */,
 				578352552E7C7A18007A2B7F /* LocationPermissions.swift */,
-				578352572E7C7E44007A2B7F /* GetUserLocation.swift */,
 				5783525E2E7D97A9007A2B7F /* LocationSearchMap.swift */,
 			);
 			path = MapViews;
@@ -114,7 +109,6 @@
 				57C458B22E6340CE007B6F33 /* UpdateEditReviewModel.swift */,
 				5700A4972E64DC2900BEBFAE /* ModelFormType.swift */,
 				5783524C2E7B36B4007A2B7F /* ReviewMarker.swift */,
-				578352602E7D97D6007A2B7F /* LocationSearchModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -254,7 +248,6 @@
 				5783525B2E7D2DB4007A2B7F /* LocationSearchService.swift in Sources */,
 				578071972E53F42E00CA4EB1 /* ReviewModel.swift in Sources */,
 				5756444D2E7585610087CBAC /* UIKitCamera.swift in Sources */,
-				578352612E7D97D6007A2B7F /* LocationSearchModel.swift in Sources */,
 				57C458B12E6334CC007B6F33 /* Constants.swift in Sources */,
 				5700A4952E64BE8B00BEBFAE /* TileListView.swift in Sources */,
 				578352562E7C7A18007A2B7F /* LocationPermissions.swift in Sources */,
@@ -268,7 +261,6 @@
 				578071702E5280C900CA4EB1 /* TileViewCompact.swift in Sources */,
 				5700A4982E64DC2900BEBFAE /* ModelFormType.swift in Sources */,
 				578071AE2E53FEB300CA4EB1 /* TileViewLarge.swift in Sources */,
-				578352582E7C7E44007A2B7F /* GetUserLocation.swift in Sources */,
 				5783524D2E7B36B4007A2B7F /* ReviewMarker.swift in Sources */,
 				5783525F2E7D97A9007A2B7F /* LocationSearchMap.swift in Sources */,
 			);
