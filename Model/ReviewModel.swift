@@ -82,7 +82,7 @@ class ReviewModel: Hashable, Codable, Identifiable{
         try container.encodeIfPresent(longitudeDelta, forKey: .longitudeDelta)
     }
  
-    init(id: UUID, locationName: String, food: String, reviewEntry: String, date: Date, imageData: Data? = nil, latitude: Double, longitude: Double, latitudeDelta: Double? = nil, longitudeDelta: Double? = nil) {
+    init(id: UUID, locationName: String, food: String, reviewEntry: String, date: Date, imageData: Data? = nil, latitude: Double = 0, longitude: Double = 0, latitudeDelta: Double? = nil, longitudeDelta: Double? = nil) {
         self.id = id
         self.locationName = locationName
         self.food = food
@@ -108,8 +108,8 @@ extension ReviewModel {
         
         var reviews: [ReviewModel]{
             [
-                .init(id: UUID(), locationName: "Burger Shop", food: "Burger", reviewEntry: "Great food", date: Date(), latitude: 37.7749, longitude: -122.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
-                .init(id: UUID(), locationName: "Burger Queen", food: "Burger", reviewEntry: "Okay food", date: Date(), latitude: 30.7749, longitude: -170.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
+                .init(id: UUID(), locationName: "Sushi Express", food: "Sushi", reviewEntry: "Great food", date: Date(), latitude: 37.7749, longitude: -122.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
+                .init(id: UUID(), locationName: "Bao Spot", food: "Bao", reviewEntry: "Okay food", date: Date(), latitude: 30.7749, longitude: -170.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
                 .init(id: UUID(), locationName: "Ramen Spot", food: "Ramen", reviewEntry: "So Good food", date: Date(), latitude: 47.7749, longitude: -142.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
                 .init(id: UUID(), locationName: "Gyro Hub", food: "Gyro", reviewEntry: "Greek food", date: Date(), latitude: 17.7749, longitude: -102.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
                 .init(id: UUID(), locationName: "Mcdonalds", food: "Salad", reviewEntry: "Bad food", date: Date(), latitude: 27.7749, longitude: -112.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),

@@ -10,6 +10,7 @@ import SwiftData
 import PhotosUI
 import MapKit
 
+@MainActor
 struct EditEntry: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -20,10 +21,12 @@ struct EditEntry: View {
     @State private var cameraError: CameraPermission.CameraError?
     
     @State private var mapCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
-    @State private var isShowingLocationSearch: Bool = false
+    @State private var isShowingLocationSearch: Bool = true
     
     @State var locationSearchViewModel = LocationSearchService()
-    
+    //@State private var coordinates: CLLocationCoordinate2D?
+    @State private var longitude: Double = 0
+    @State private var latitude: Double = 0
     
     @FocusState private var scrollToLocationBox: Bool
     @FocusState private var scrollToFoodBox: Bool
@@ -31,6 +34,7 @@ struct EditEntry: View {
     
     @FocusState private var isKeyboardShowing: Bool
     @FocusState private var focusField: Field?
+    
     
     let edgePadding: CGFloat = 30
     let verticalPadding: CGFloat = 5
@@ -63,7 +67,7 @@ struct EditEntry: View {
                             ZStack {
                                 Image(uiImage: viewModel.image)
                                     .resizable()
-                                    .aspectRatio(CGSize(width:3,height:4), contentMode: .fit)
+                                    .aspectRatio(CGSize(width:3,height:4), contentMode: .fill)
                                     .clipShape(RoundedRectangle(cornerRadius:20))
                                     .overlay(
                                         RoundedRectangle(cornerRadius:20)
@@ -125,24 +129,45 @@ struct EditEntry: View {
                                 .onSubmit{
                                     focusField = .food
                                 }
-                            
-                            if !locationSearchViewModel.results.isEmpty && focusField == .location {
-                                List(locationSearchViewModel.results) { result in
-                                    VStack(alignment: .leading) {
-                                        Text(result.title)
-                                        Text(result.subtitle)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    .onTapGesture{
-                                        print("Result: \(result)")
-                                        locationSearchViewModel.query = result.title
+                                .submitLabel(.done)
+                                
+                                
+                            if !locationSearchViewModel.results.isEmpty && focusField == .location{
+                                
+                                withAnimation(.bouncy){
+                                    List(locationSearchViewModel.results) { result in
+                                        VStack(alignment: .leading) {
+                                            Text(result.title)
+                                            Text(result.subtitle)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
                                         
+                                        .onTapGesture{
+                                            print("Selected location result: \(result)")
+                                            locationSearchViewModel.query = result.title
+                                            
+                                            Task {
+                                                do {
+                                                    let coordinates = try await locationSearchViewModel.resolveCoordinate(for : result)
+                                                    
+                                                    await MainActor.run {
+                                                        mapCameraPosition = .camera(MapCamera(centerCoordinate: coordinates, distance: 1000))
+                                                    }
+                                                    
+                                                    viewModel.longitude = coordinates.longitude
+                                                    viewModel.latitude = coordinates.latitude
+                                                
+                                                } catch {
+                                                    print("Error fetching coordinates for result: \(result)")
+                                                }
+                                            }
+                                            
+                                        }
                                     }
-                                    
+                                    .scrollContentBackground(.hidden)
+                                    .frame(minHeight: 300)
                                 }
-                                .scrollContentBackground(.hidden)
-                                .frame(minHeight: 300)
                             }
                             
                             TextField("What did you have?", text: $viewModel.food, axis: .vertical)
@@ -154,8 +179,14 @@ struct EditEntry: View {
                                 .focused($isKeyboardShowing)
                                 .focused($focusField, equals: .food)
                                 .focused($scrollToFoodBox)
-                                .onSubmit{
+                                .onSubmit(of: .text){
                                     focusField = .review
+                                }
+                                .onChange(of: viewModel.food) { oldValue, newValue in
+                                    if newValue.contains("\n"){
+                                        viewModel.food = newValue.replacingOccurrences(of: "\n", with: "")
+                                        focusField = .review
+                                    }
                                 }
                             
                             TextField("Review", text: $viewModel.reviewEntry, axis: .vertical)
@@ -167,19 +198,12 @@ struct EditEntry: View {
                                 .onSubmit{
                                     focusField = nil
                                 }
-                            /*
-                             Button{
-                             mapCameraPosition = .camera(MapCamera(centerCoordinate: CLLocationCoordinate2D(latitude: 39.7749, longitude: -122.4194), distance: 5000))
-                             } label:
-                             {
-                             Text("Set map location")
-                             .padding(5)
-                             .background{
-                             RoundedRectangle(cornerRadius: 25)
-                             .fill(Color.blue)
-                             }
-                             }
-                             */
+                                .onChange(of: viewModel.reviewEntry) { oldValue, newValue in
+                                    if newValue.contains("\n"){
+                                        viewModel.reviewEntry = newValue.replacingOccurrences(of: "\n", with : "")
+                                        focusField = nil
+                                    }
+                                }
                             
                             Spacer(minLength:50)
                             
@@ -193,12 +217,14 @@ struct EditEntry: View {
                             }
                         }
                         .padding([.leading, .trailing], 25)
+                        
                         Divider()
                         
                         MapView(cameraPosition: $mapCameraPosition)
                             .aspectRatio(CGSize(width:4, height:5), contentMode: .fit)
                             .clipShape(RoundedRectangle(cornerRadius:20))
                             .padding([.leading,.trailing], edgePadding)
+                        
                     }
                     .onTapGesture{
                         isKeyboardShowing = false
@@ -219,14 +245,16 @@ struct EditEntry: View {
                                             review.imageData = nil
                                         }
                                         review.id = viewModel.id
-                                        review.locationName = locationSearchViewModel.query
+                                        review.locationName = viewModel.locationName
                                         review.food = viewModel.food
+                                        review.longitude = viewModel.longitude
+                                        review.latitude = viewModel.latitude
                                         review.reviewEntry = viewModel.reviewEntry
                                         review.date = viewModel.date
                                         dismiss()
                                     }
                                 } else {
-                                    let newReview = ReviewModel(id: viewModel.id, locationName: locationSearchViewModel.query, food: viewModel.food, reviewEntry: viewModel.reviewEntry, date: viewModel.date, latitude: 37.7749, longitude: -122.0070)
+                                    let newReview = ReviewModel(id: viewModel.id, locationName: locationSearchViewModel.query, food: viewModel.food, reviewEntry: viewModel.reviewEntry, date: viewModel.date, latitude: viewModel.latitude, longitude: viewModel.longitude)
                                     if viewModel.image != Constants.placeholder {
                                         newReview.imageData = viewModel.image.jpegData(compressionQuality: 0.8)
                                     }
@@ -251,7 +279,13 @@ struct EditEntry: View {
                 .onAppear{
                     imagePicker.setup(viewModel)
                     CLLocationManager().requestWhenInUseAuthorization()
-                    //locationSearchViewModel.currentRegion = mapCameraPosition.region!
+                    
+                    // If there is already a location, populate map view
+                    if viewModel.longitude != 0 && viewModel.latitude != 0 {
+                        let coordinates = CLLocationCoordinate2D(latitude: viewModel.latitude, longitude: viewModel.longitude)
+                        
+                        mapCameraPosition = .camera(MapCamera(centerCoordinate: coordinates, distance: 1000))
+                    }
                 }
                 .onChange(of: mapCameraPosition){ _, newPosition in
                     if let region = newPosition.region {
@@ -266,9 +300,9 @@ struct EditEntry: View {
                             case .location:
                                 reader.scrollTo("locationScrollPoint", anchor: .top)
                             case .food:
-                                reader.scrollTo("foodScrollPoint", anchor: .top)
+                                reader.scrollTo("locationScrollPoint", anchor: .top)
                             case .review:
-                                reader.scrollTo("reviewScrollPoint", anchor: .top)
+                                reader.scrollTo("locationScrollPoint", anchor: .top)
                             case .none:
                                 break
                             }

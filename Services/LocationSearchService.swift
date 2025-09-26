@@ -22,6 +22,8 @@ class LocationSearchService: NSObject {
     var results: [LocationResult] = []
     var status: SearchStatus = .idle
     var completer: MKLocalSearchCompleter
+    var longitude: Double?
+    var latitude: Double?
     
     var currentRegion: MKCoordinateRegion = MKCoordinateRegion(.world)
     
@@ -66,6 +68,30 @@ extension LocationSearchService: MKLocalSearchCompleterDelegate{
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         
+    }
+}
+
+extension LocationSearchService {
+    func resolveCoordinate(for result: LocationResult) async throws -> CLLocationCoordinate2D {
+        // If you keep the original completion, prefer this initializer:
+        //let request = MKLocalSearch.Request(completion: result.completion)
+
+        // Otherwise, fall back to the text (less precise than using completion directly)
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = result.title.isEmpty ? result.subtitle : "\(result.title) \(result.subtitle)"
+        request.region = completer.region
+        request.pointOfInterestFilter = completer.pointOfInterestFilter
+
+        let search = MKLocalSearch(request: request)
+        let response = try await search.start()
+
+        if let item = response.mapItems.first {
+            longitude = item.location.coordinate.longitude
+            latitude = item.location.coordinate.latitude
+            return item.location.coordinate
+        } else {
+            throw NSError(domain: "LocationSearchService", code: 404, userInfo: [NSLocalizedDescriptionKey: "No coordinate found for selection."])
+        }
     }
 }
 
