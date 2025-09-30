@@ -15,12 +15,15 @@ struct TileViewLarge: View {
     @Environment(\.dismiss) private var dismiss
     @State private var formType: ModelFormType?
     @State private var mapCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
+    
 
     
     let edgePadding: CGFloat = 30
     let verticalPadding: CGFloat = 10
     
     let review: ReviewModel
+    
+    @State private var markerPosition: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude:0,longitude:0)
   
     // Format date output
     let dateFormatter: DateFormatter = {
@@ -37,21 +40,6 @@ struct TileViewLarge: View {
             ScrollView{
                 VStack{
                     ImageView(image: review.image == nil ? Constants.placeholder : review.image!)
-                    
-                        
-                    
-                    
-                    /*
-                    Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
-                        .resizable()
-                        .aspectRatio(CGSize(width:3,height:4), contentMode: .fill)
-                        .clipShape(RoundedRectangle(cornerRadius:20))
-                        .overlay(
-                            RoundedRectangle(cornerRadius:20)
-                                .stroke(.frameStroke, lineWidth:2)
-                        )
-                        .shadow(radius:6)
-                     */
                     
                     VStack{
                         HStack{
@@ -114,13 +102,14 @@ struct TileViewLarge: View {
                     
                     Divider()
                     
-                    MapView(cameraPosition: $mapCameraPosition)
+                    MapView(cameraPosition: $mapCameraPosition, markerCoordinate: $markerPosition )
                         .aspectRatio(CGSize(width:4, height:5), contentMode: .fit)
                         .clipShape(RoundedRectangle(cornerRadius:20))
                     
                 }
                 .onAppear{
                     let coordinates = CLLocationCoordinate2D(latitude: review.latitude, longitude: review.longitude)
+                    markerPosition = coordinates
                     
                     mapCameraPosition = .camera(MapCamera(centerCoordinate: coordinates, distance: 1000))
  
@@ -153,7 +142,6 @@ struct TileViewLarge: View {
                         }
                         
                     }
-                    
                 }
             }
         }

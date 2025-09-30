@@ -108,7 +108,7 @@ extension ReviewModel {
         
         var reviews: [ReviewModel]{
             [
-                .init(id: UUID(), locationName: "Sushi Express", food: "Sushi", reviewEntry: "Great food", date: Date(), latitude: 37.7749, longitude: -122.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
+                .init(id: UUID(), locationName: "Sushi Express", food: "Sushi", reviewEntry: "Great food", date: Date(), latitude: 35.0, longitude: -120.0, latitudeDelta: 0.15, longitudeDelta: 0.15),
                 .init(id: UUID(), locationName: "Bao Spot", food: "Bao", reviewEntry: "Okay food", date: Date(), latitude: 30.7749, longitude: -170.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
                 .init(id: UUID(), locationName: "Ramen Spot", food: "Ramen", reviewEntry: "So Good food", date: Date(), latitude: 47.7749, longitude: -142.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),
                 .init(id: UUID(), locationName: "Gyro Hub", food: "Gyro", reviewEntry: "Greek food", date: Date(), latitude: 17.7749, longitude: -102.4194, latitudeDelta: 0.15, longitudeDelta: 0.15),

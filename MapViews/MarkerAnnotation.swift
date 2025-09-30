@@ -10,7 +10,7 @@ import MapKit
 
 struct MarkerAnnotation: Identifiable{
     let id = UUID()
-    let coordinate: CLLocationCoordinate2D
     let title: String
+    let coordinate: CLLocationCoordinate2D
 }
 

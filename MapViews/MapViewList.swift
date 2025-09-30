@@ -16,26 +16,27 @@ struct MapViewList: View {
     @Query private var reviews: [ReviewModel]
     @Environment(\.modelContext) private var context
 
-    //@State private var review: ReviewModel?
     
     var body: some View {
-        Map(position: $cameraPosition){
+        NavigationStack{
+            Map(position: $cameraPosition){
                 ForEach(reviews) { review in
-                    Marker(coordinate: review.coordinate){
-                        Label(review.locationName, systemImage: "star.fill")
-                    }
-
+                    PhotoMarkerView(review: review)
+                    
                 }
+            }
+            .onMapCameraChange(frequency: .onEnd){ context in
+                visibleRegion = context.region
+            }
+            .onAppear{
+                //review = reviews.first
+                //if let region = review?.region { debugging use only
+                //    cameraPosition = .region(region)
+                //}
+            }
         }
-        .onMapCameraChange(frequency: .onEnd){ context in
-            visibleRegion = context.region
-        }
-        .onAppear{
-            //review = reviews.first
-            //if let region = review?.region { debugging use only
-            //    cameraPosition = .region(region)
-            //}
-        }
+        
+        
     }
     
 }

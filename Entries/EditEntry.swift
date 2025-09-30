@@ -22,7 +22,8 @@ struct EditEntry: View {
     
     @State private var mapCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
     @State private var isShowingLocationSearch: Bool = true
-    
+    @State private var markerPosition: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude:0,longitude:0)
+
     @State var locationSearchViewModel = LocationSearchService()
     //@State private var coordinates: CLLocationCoordinate2D?
     @State private var longitude: Double = 0
@@ -157,6 +158,8 @@ struct EditEntry: View {
                                                     
                                                     viewModel.longitude = coordinates.longitude
                                                     viewModel.latitude = coordinates.latitude
+                                                    
+                                                    markerPosition = coordinates
                                                 
                                                 } catch {
                                                     print("Error fetching coordinates for result: \(result)")
@@ -220,11 +223,10 @@ struct EditEntry: View {
                         
                         Divider()
                         
-                        MapView(cameraPosition: $mapCameraPosition)
+                        MapView(cameraPosition: $mapCameraPosition, markerCoordinate: $markerPosition)
                             .aspectRatio(CGSize(width:4, height:5), contentMode: .fit)
                             .clipShape(RoundedRectangle(cornerRadius:20))
                             .padding([.leading,.trailing], edgePadding)
-                        
                     }
                     .onTapGesture{
                         isKeyboardShowing = false

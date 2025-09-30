@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5700A4952E64BE8B00BEBFAE /* TileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5700A4932E64BE8B00BEBFAE /* TileListView.swift */; };
 		5700A4982E64DC2900BEBFAE /* ModelFormType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5700A4972E64DC2900BEBFAE /* ModelFormType.swift */; };
+		572FDF8D2E8839EE00AC9DDA /* PhotoMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572FDF8C2E8839EE00AC9DDA /* PhotoMarkerView.swift */; };
 		5756444B2E7582820087CBAC /* CameraPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5756444A2E7582820087CBAC /* CameraPermissions.swift */; };
 		5756444D2E7585610087CBAC /* UIKitCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5756444C2E7585610087CBAC /* UIKitCamera.swift */; };
 		578071702E5280C900CA4EB1 /* TileViewCompact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5780716C2E5280C900CA4EB1 /* TileViewCompact.swift */; };
@@ -22,6 +23,8 @@
 		5783525F2E7D97A9007A2B7F /* LocationSearchMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5783525E2E7D97A9007A2B7F /* LocationSearchMap.swift */; };
 		578845E82E5A5FDB000D3CEE /* MapViewList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578845E72E5A5FDB000D3CEE /* MapViewList.swift */; };
 		57B0104B2E86EEC600903E38 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B0104A2E86EEC600903E38 /* ImageView.swift */; };
+		57B0104D2E8716D500903E38 /* MarkerAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B0104C2E8716D500903E38 /* MarkerAnnotation.swift */; };
+		57B0104F2E87172800903E38 /* MarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B0104E2E87172800903E38 /* MarkerView.swift */; };
 		57C458B12E6334CC007B6F33 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C458B02E6334CC007B6F33 /* Constants.swift */; };
 		57C458B32E6340CE007B6F33 /* UpdateEditReviewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C458B22E6340CE007B6F33 /* UpdateEditReviewModel.swift */; };
 		57C458B52E634740007B6F33 /* EditEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C458B42E634740007B6F33 /* EditEntry.swift */; };
@@ -31,6 +34,7 @@
 /* Begin PBXFileReference section */
 		5700A4932E64BE8B00BEBFAE /* TileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileListView.swift; sourceTree = "<group>"; };
 		5700A4972E64DC2900BEBFAE /* ModelFormType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFormType.swift; sourceTree = "<group>"; };
+		572FDF8C2E8839EE00AC9DDA /* PhotoMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMarkerView.swift; sourceTree = "<group>"; };
 		5756444A2E7582820087CBAC /* CameraPermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPermissions.swift; sourceTree = "<group>"; };
 		5756444C2E7585610087CBAC /* UIKitCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitCamera.swift; sourceTree = "<group>"; };
 		5780716C2E5280C900CA4EB1 /* TileViewCompact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileViewCompact.swift; sourceTree = "<group>"; };
@@ -45,6 +49,8 @@
 		578845E72E5A5FDB000D3CEE /* MapViewList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewList.swift; sourceTree = "<group>"; };
 		57A944212E5276E400EE3556 /* BiteLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BiteLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57B0104A2E86EEC600903E38 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
+		57B0104C2E8716D500903E38 /* MarkerAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerAnnotation.swift; sourceTree = "<group>"; };
+		57B0104E2E87172800903E38 /* MarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerView.swift; sourceTree = "<group>"; };
 		57C458B02E6334CC007B6F33 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		57C458B22E6340CE007B6F33 /* UpdateEditReviewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateEditReviewModel.swift; sourceTree = "<group>"; };
 		57C458B42E634740007B6F33 /* EditEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditEntry.swift; sourceTree = "<group>"; };
@@ -97,9 +103,12 @@
 			isa = PBXGroup;
 			children = (
 				578071932E53EA2500CA4EB1 /* MapView.swift */,
-				578845E72E5A5FDB000D3CEE /* MapViewList.swift */,
 				578352552E7C7A18007A2B7F /* LocationPermissions.swift */,
 				5783525E2E7D97A9007A2B7F /* LocationSearchMap.swift */,
+				57B0104C2E8716D500903E38 /* MarkerAnnotation.swift */,
+				57B0104E2E87172800903E38 /* MarkerView.swift */,
+				572FDF8C2E8839EE00AC9DDA /* PhotoMarkerView.swift */,
+				578845E72E5A5FDB000D3CEE /* MapViewList.swift */,
 			);
 			path = MapViews;
 			sourceTree = "<group>";
@@ -254,6 +263,7 @@
 				5756444D2E7585610087CBAC /* UIKitCamera.swift in Sources */,
 				57C458B12E6334CC007B6F33 /* Constants.swift in Sources */,
 				5700A4952E64BE8B00BEBFAE /* TileListView.swift in Sources */,
+				57B0104F2E87172800903E38 /* MarkerView.swift in Sources */,
 				578352562E7C7A18007A2B7F /* LocationPermissions.swift in Sources */,
 				578071942E53EA2500CA4EB1 /* MapView.swift in Sources */,
 				57FFCA2E2E63EC8500BF106A /* ImagePicker.swift in Sources */,
@@ -267,6 +277,8 @@
 				578071AE2E53FEB300CA4EB1 /* TileViewLarge.swift in Sources */,
 				5783524D2E7B36B4007A2B7F /* ReviewMarker.swift in Sources */,
 				5783525F2E7D97A9007A2B7F /* LocationSearchMap.swift in Sources */,
+				57B0104D2E8716D500903E38 /* MarkerAnnotation.swift in Sources */,
+				572FDF8D2E8839EE00AC9DDA /* PhotoMarkerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

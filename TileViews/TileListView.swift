@@ -65,10 +65,8 @@ struct TileListView: View {
                     // Map button
                     ToolbarItem(placement: .bottomBar){
                         VStack{
-                            Button{
-                                withAnimation(.bouncy){
-                                    showingMap.toggle()
-                                }
+                            NavigationLink{
+                                MapViewList()
                             } label: {
                                 Image(systemName: "map.circle.fill")
                                     .foregroundStyle(foreGroundColor)
