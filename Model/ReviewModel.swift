@@ -94,8 +94,6 @@ class ReviewModel: Hashable, Codable, Identifiable{
         self.latitudeDelta = latitudeDelta
         self.longitudeDelta = longitudeDelta
     }
-    
-
 }
 
 extension ReviewModel {

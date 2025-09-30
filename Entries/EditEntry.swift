@@ -130,6 +130,11 @@ struct EditEntry: View {
                                 .onSubmit{
                                     focusField = .food
                                 }
+                                .onAppear{
+                                    if !viewModel.locationName.isEmpty{
+                                        locationSearchViewModel.query = viewModel.locationName
+                                    }
+                                }
                                 .submitLabel(.done)
                                 
                                 
@@ -217,6 +222,7 @@ struct EditEntry: View {
                                     .frame(maxWidth: .infinity, alignment: .trailing)
                                     .font(.system(size:11, weight: .light))
                                     .opacity(0.3)
+                                    
                             }
                         }
                         .padding([.leading, .trailing], 25)
@@ -247,7 +253,7 @@ struct EditEntry: View {
                                             review.imageData = nil
                                         }
                                         review.id = viewModel.id
-                                        review.locationName = viewModel.locationName
+                                        review.locationName = locationSearchViewModel.query
                                         review.food = viewModel.food
                                         review.longitude = viewModel.longitude
                                         review.latitude = viewModel.latitude

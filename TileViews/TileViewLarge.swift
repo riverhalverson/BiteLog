@@ -16,15 +16,17 @@ struct TileViewLarge: View {
     @State private var formType: ModelFormType?
     @State private var mapCameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
     
-
-    
     let edgePadding: CGFloat = 30
     let verticalPadding: CGFloat = 10
     
-    let review: ReviewModel
+    @State var review: ReviewModel
+    
+    
     
     @State private var markerPosition: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude:0,longitude:0)
   
+    @State var timeSinceReview: String = "0m ago"
+    
     // Format date output
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -105,7 +107,6 @@ struct TileViewLarge: View {
                     MapView(cameraPosition: $mapCameraPosition, markerCoordinate: $markerPosition )
                         .aspectRatio(CGSize(width:4, height:5), contentMode: .fit)
                         .clipShape(RoundedRectangle(cornerRadius:20))
-                    
                 }
                 .onAppear{
                     let coordinates = CLLocationCoordinate2D(latitude: review.latitude, longitude: review.longitude)
@@ -140,14 +141,11 @@ struct TileViewLarge: View {
                             try? modelContext.save()
                             dismiss()
                         }
-                        
                     }
                 }
             }
         }
-
     }
-        
 }
 
 #Preview {

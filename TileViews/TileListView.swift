@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 
+@MainActor
 struct TileListView: View {
     @State private var selection: Tab = .journal
     @State private var showingAddEntry = false
@@ -30,6 +31,13 @@ struct TileListView: View {
         case journal
         case map
     }
+    
+    // Format date output, only used for debugging
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter
+    }()
     
     var body: some View {
         NavigationStack{
@@ -54,11 +62,10 @@ struct TileListView: View {
                                 TileViewCompact(review: review)
                                     .padding(10)
                                     .matchedTransitionSource(id: review.id, in: namespace)
-                                    
-                                
                             }
                         }
-                    }                    
+                    }
+                    
                 }
             }
                 .toolbar{
@@ -116,7 +123,6 @@ struct TileListView: View {
                 .presentationDetents([.fraction(0.75)])
                 .presentationDragIndicator(.visible)
         }
-        
     }
  
 }

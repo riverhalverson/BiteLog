@@ -12,16 +12,18 @@ let gradientColors: [Color] = [
     .tileGradientTop,
     .tileGradientBottom]
 
-
 struct TileViewCompact: View {
     let edgePadding: CGFloat = 10
     let tileWidth: CGFloat = 180
-    let review: ReviewModel
+    
+    @State var review: ReviewModel
+    
+    @State var timeSinceReview: String = "0m ago"
     
     // Format date output
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.timeStyle = .medium
+        formatter.dateStyle = .short
         return formatter
     }()
     
@@ -29,19 +31,13 @@ struct TileViewCompact: View {
         
         VStack{
             // The reviews image
-            Image(uiImage: review.image == nil ? Constants.placeholder : review.image!)
-                .resizable()
-                .aspectRatio(CGSize(width:3,height:4), contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius:20))
-                .overlay(
-                    RoundedRectangle(cornerRadius:20)
-                        .stroke(.frameStroke, lineWidth:2)
-                )
-                .shadow(color:.shadow,radius:3)
+            ImageView(image: review.image == nil ? Constants.placeholder : review.image!)
         
             VStack{
                 HStack{
                     Text(review.locationName)
+                        .lineLimit(2, reservesSpace: true)
+                        .multilineTextAlignment(.leading)
                         .frame(maxWidth: tileWidth, alignment: .leading)
                         .font(.body)
                  
@@ -64,9 +60,29 @@ struct TileViewCompact: View {
                 Spacer()
                 
                 // Review Entry Date in lower right corner
-                Text(dateFormatter.string(from: review.date))
+                Text(timeSinceReview)
                     .font(.caption2)
                     .opacity(0.5)
+            }
+            .onAppear{
+                let elapsed = Date().timeIntervalSince(review.date)
+                let minutes = Int(elapsed / 60) //to get minutes from
+                let hours = Int(minutes / 60)
+                let days = Int(hours / 24)
+                let months = Int(days / 30)
+                
+                if minutes < 60 {
+                    timeSinceReview = String(minutes) + "m ago"
+                }
+                else if minutes < 1440 {
+                    timeSinceReview = String(hours) + "h ago"
+                }
+                else if days < 30{
+                    timeSinceReview = String(days) + "d ago"
+                }
+                else{
+                    timeSinceReview = String(months) + "m ago"
+                }
             }
         }
         .padding(10)
