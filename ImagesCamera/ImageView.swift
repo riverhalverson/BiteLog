@@ -16,7 +16,7 @@ struct ImageView: View {
         VStack{
             Image(uiImage: image)
                 .resizable()
-                .aspectRatio(CGSize(width:3,height:4), contentMode: .fill)
+                .aspectRatio(CGSize(width:3,height:5), contentMode: .fill)
                 .clipped()
                 .clipShape(RoundedRectangle(cornerRadius:20))
                 .overlay(

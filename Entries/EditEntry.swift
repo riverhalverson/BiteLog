@@ -68,7 +68,7 @@ struct EditEntry: View {
                             ZStack {
                                 Image(uiImage: viewModel.image)
                                     .resizable()
-                                    .aspectRatio(CGSize(width:3,height:4), contentMode: .fill)
+                                    .aspectRatio(CGSize(width:3,height:5), contentMode: .fill)
                                     .clipShape(RoundedRectangle(cornerRadius:20))
                                     .overlay(
                                         RoundedRectangle(cornerRadius:20)
